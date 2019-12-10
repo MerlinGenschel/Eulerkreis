@@ -24,6 +24,7 @@ SOURCES += \
 HEADERS += \
     dialoghelp.h \
     dockwidget.h \
+    graph_net.h \
     mainwindow.h
 
 FORMS += \
