@@ -116,6 +116,8 @@ Graph( string const& dateiName, bool gerichtet = false )
 
 //Methoden
 
+    //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
+    vector<int> getEdges(int i);
 
     bool writeToFile(string const& dateiName)
     {

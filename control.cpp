@@ -42,6 +42,7 @@ void control::mousePressEvent(QMouseEvent* event)
 
     if(event->button() == Qt::LeftButton) // Rechte Maustaste: Ein Quadrat einfügen;
     {
+        //wenn "k" gedrückt ist...
         double _x =event->x()/breite;
         double _y =event->y()/hoehe;
         model.addNode(_x,_y);
