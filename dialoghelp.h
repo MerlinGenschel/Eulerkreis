@@ -3,6 +3,8 @@
 #include <QCloseEvent>
 #include <QDialog>
 
+
+//Alexejs git tests
 namespace Ui {
 class DialogHelp;
 }
