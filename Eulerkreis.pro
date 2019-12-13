@@ -20,14 +20,16 @@ SOURCES += \
     dockwidget.cpp \
     main.cpp \
     mainwindow.cpp \
-    control.cpp
+    control.cpp \
+    paint.cpp
 
 HEADERS += \
+    Graph.h \
     dialoghelp.h \
     dockwidget.h \
-    graph_net.h \
     mainwindow.h \
-    control.h
+    control.h \
+    paint.h
 
 FORMS += \
     dialoghelp.ui \

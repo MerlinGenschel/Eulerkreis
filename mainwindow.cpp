@@ -6,12 +6,20 @@
 #include "dialoghelp.h"
 #include <QFileDialog>
 #include <QCloseEvent>
+#include "Graph.h"
+#include "paint.h"
+#include "control.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-   // ui->actionBeenden();
+    // ui->actionBeenden();
+    Graph *model                      = new Graph();
+    paint *view          = new paint(*model);
+    control *controller = new control(*model,*view);
+
+    setCentralWidget(view);
 }
 
 MainWindow::~MainWindow()

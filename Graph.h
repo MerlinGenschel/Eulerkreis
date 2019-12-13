@@ -1,8 +1,14 @@
+#ifndef GRAPH_H
+#define GRAPH_H
+
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <cmath>
 #include <fstream>
+
+#include <QObject>
 using namespace std;
 
 // data structure to store graph edges
@@ -11,8 +17,10 @@ struct Edge {
 };
 
 // class to represent a graph object
-class Graph
+class Graph:public QObject
 {
+    Q_OBJECT
+
     bool GERICHTET;
     // construct a vector of vectors to represent an adjacency list
     vector<vector<int>> adjList;
@@ -27,6 +35,12 @@ class Graph
     size_t _numEdges=0;
 public:
 
+
+    //Standard Konstruktor
+    Graph()
+    {
+
+    }
 
     // Graph Kontruktor
     Graph(vector<Edge> const &edges, int N,vector<pair<double,double>> coordList,bool gerichtet = 0)
@@ -134,7 +148,7 @@ Graph( string const& dateiName, bool gerichtet = false )
     _numNodes++;
     adjList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
-
+    cout << "Knoten erstellt bei: " << x << "  " << y << endl;
     return true;
     }
 
@@ -247,12 +261,17 @@ Graph( string const& dateiName, bool gerichtet = false )
         }
     }
 
+
+signals:
+    void graphChanged(); // Dieses Signal wird immer dann gesendet (durch einen Funktionsaufruf in der Klasse), wenn sich die Daten geändert haben
+    // dies kann sicher bestimmt werden, da die Daten privat, also gekapselt sind. Ein schreibener Zugriff erfolgt also ausschließlich durch die Methoden.
+
 };
 
+#endif // GRAPH_H
 
 
-
-
+/*
 // Graph Implementation using STL
 int main()
 {
@@ -294,3 +313,4 @@ int main()
     graph2.printGraph();
     return 0;
 }
+*/
