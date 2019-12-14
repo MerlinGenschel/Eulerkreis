@@ -74,7 +74,9 @@ void control::mousePressEvent(QMouseEvent* event)
     }
    else if(event->button() == Qt::RightButton)
     {
-           //Löschen
+           size_t index = model.clickedOnNode(_x,_y);
+           if (index != -1)
+                   model.removeNode(index);
     }
 
 
