@@ -7,6 +7,7 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <QString>
 
 #include <QObject>
 using namespace std;
@@ -22,8 +23,7 @@ class Graph:public QObject
     Q_OBJECT
 
     bool GERICHTET;
-    // construct a vector of vectors to represent an adjacency list
-    vector<vector<int>> adjList;
+
 
     // construct a vector of pairs of doubles to save the coordinates of the nodes;
     vector<pair<double,double>> _coordList;
@@ -33,11 +33,16 @@ class Graph:public QObject
 
     //Number of Edges in the graph;
     size_t _numEdges=0;
+
+    // construct a vector of vectors to represent an adjacency list
+    vector<vector<int>> adjList;
+
 public:
 
 
+
     //Standard Konstruktor
-    Graph()
+    Graph(QObject* parent)
     {
 
     }
@@ -57,58 +62,7 @@ public:
 
     //Graph Konsturktor zum laden mit Datei
     // Initialisierungskonstruktor von Datei
-Graph( string const& dateiName, bool gerichtet = false )
-:GERICHTET(gerichtet)
-{
-    ifstream fin( dateiName.c_str() ) ;
-
-    if ( ! fin )
-        throw "Graph::Graph(): Datei kann nicht geoeffnet werden!" ;
-
-/***  lese Graphparameter aus  ***/
-
-    size_t nKnoten, nKanten ;
-    string dummy ;				// zum Lesen und Ignorieren
-
-    fin >> nKnoten ;
-    getline( fin, dummy ) ;		// ignoriere Rest der Zeile
-    fin >> nKanten ;
-    getline( fin, dummy ) ;		// ignoriere Rest der Zeile
-
-    _coordList.resize( nKnoten ) ;
-    adjList.resize( nKnoten ) ;
-
-    _numNodes=nKnoten;
-    _numEdges=nKanten;
-/***  lese Knoten aus  ***/
-
-    for ( size_t i = 0 ;  i < nKnoten ;  ++i )
-    {
-        double x,y;
-        fin >> x ;
-        fin >> y ;
-        _coordList[i]=make_pair(x,y);
-        getline( fin, dummy ) ;		// ignoriere Rest der Zeile
-    }
-
-
-/***  lese Kanten aus  ***/
-    cout << "nKanten = "<<nKanten<<endl;
-    for ( size_t i = 0 ;  i < nKanten ;  ++i )
-    {
-        string fuss, kopf;
-        fin >> fuss >> kopf ;
-
-        int src = stoi(fuss);
-        int dest= stoi(kopf);
-
-        //Füge Kante hinzu
-        addEdge(src,dest);
-    }  // for ( i )
-
-    fin.close() ;
-
-}  // Graph::Graph()
+Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
 
 
@@ -116,86 +70,33 @@ Graph( string const& dateiName, bool gerichtet = false )
 
 //Methoden
 
+    //Algo zur bestimmung ob es sich um einen Eulerkreis handelt
+    //gibt einen Vector mit den Indizes der Knoten wieder, so wie der Algo von Fleury es bestimmt hat
+    //Wenn es kein Eulerkreis ist, dann ist der erste Eintrag vom vector = -1 als Signalwert
+    vector<int> pruefeEulerKreis() const;
+
+
+
     //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
-    vector<int> getEdges(int i);
-
-    bool writeToFile(string const& dateiName)
+    vector<int> getEdges(size_t i) const
     {
-        ofstream fout( dateiName.c_str() ) ;
-        fout << _numNodes<<endl;
-
-        fout << _numEdges<<endl;
-
-        //Koordinaten der Knoten
-        for(int i = 0; i < _numNodes;i++)
-        {
-            fout << _coordList[i].first << " ";
-            fout << _coordList[i].second << endl;
-        }
-
-        //Kanten
-        for(int i = 0; i < _numNodes;i++)
-        {
-            // print all neighboring vertices of vertex i
-            for (int v : adjList[i])
-                fout << v << " ";
-            fout << endl;
-        }
-        fout.close();
+        vector<int> edges = adjList[i];
+        return edges;
     }
+
+    bool writeToFile(string const& dateiName);
+
+    bool readFromFile(string const& dateiName);
 
     //füge neuen KNoten mit (x,y) Koordinaten hinzu
-    bool addNode(double x, double y)
-    {
-    _numNodes++;
-    adjList.resize(_numNodes);
-    _coordList.push_back(make_pair(x,y));
-    cout << "Knoten erstellt bei: " << x << "  " << y << endl;
-    return true;
-    }
+    bool addNode(double x, double y);
 
     //entferne den Knoten mit der Nummer index
-    bool removeNode(size_t index)
-    {
-        if (index > _numNodes || index < 0)
-            return false;
-
-        //prüfe ob es eingehende Kanten gibt
-        for (int i = 0; i < _numNodes;i++)
-            for (int k= adjList[i].size()-1; k>=0;k--)
-            {
-                if(adjList[i][k]==index)
-                    adjList[i].erase(adjList[i].begin()+k);
-
-                //nachrücken
-                if(adjList[i][k]>index)
-                    adjList[i][k]--;
-                //cout << adjList[i][k];
-            }
-        adjList.erase(adjList.begin()+index);
-        _coordList.erase(_coordList.begin()+index);
-        _numNodes--;
-
-
-        return true;
-    }
+    bool removeNode(size_t index);
 
 
     //füge Kante zwischen src und dest hinzu
-    bool addEdge(size_t src, size_t dest)
-    {
-        //prüfe ob KNoten vorhanden sind
-        if (max(src,dest) > _numNodes)
-            return false;
-
-
-        adjList[src].push_back(dest);
-        _numEdges++;
-
-        if (!GERICHTET)
-            adjList[dest].push_back(src);
-        return true;
-    }
+    bool addEdge(size_t src, size_t dest);
 
     //gib Anzahl der Knoten
     int getSize() const
@@ -210,15 +111,10 @@ Graph( string const& dateiName, bool gerichtet = false )
     }
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
-    //um (deltaX,deltaY)
-    bool moveNode(size_t index, double deltaX, double deltaY)
-    {
-        if (index >= _numNodes)
-            return false;
-        _coordList[index].first += deltaX;
-        _coordList[index].second+= deltaY;
-        return true;
-    }
+    //nach (X,Y)
+    bool moveNodeTo(size_t index, double X, double Y);
+
+
 
 
     //Liefert den Index des Knotens der an den übergebenen Koordinaten liegt
@@ -226,42 +122,12 @@ Graph( string const& dateiName, bool gerichtet = false )
     //mit Radius "nodeRadius" um den Mittelpunkt des Knotens (x,y) liegt
     //Es wird der index des "geklickten" Knotens zurückgegeben
     //Wird keiner gefunden wird "-1" als SIgnalwert zurückgegeben
-    int clickedOnNode(double _x, double _y, double nodeRadius = 0.01)
-    {
-        for(int index= 0;index< _numNodes;index++)
-        {
-            double x = _coordList[index].first;
-            double y = _coordList[index].second;
-
-            //liegt übergebener Punkt im Kreis?
-            if( pow((_x-x),2) + pow((_y-y),2) < pow(nodeRadius,2) )
-                return index;
-        }
-        return -1;
-    }
+    int clickedOnNode(double _x, double _y, double nodeRadius = 0.01);
 
 
 
 // print adjacency list representation of graph
-    void printGraph()
-    {
-        int N = getSize();
-        for (int i = 0; i < N; i++)
-        {
-            // print current vertex number
-            cout << i << " --> ";
-
-            // print all neighboring vertices of vertex i
-            for (int v : adjList[i])
-                cout << v << " ";
-            cout << setfill('_');
-
-            //print coordinates
-
-            cout <<  setw(7)<< "x= " <<  getCoord(i).first << setw(10)<<"y= " << getCoord(i).second;
-            cout <<endl;
-        }
-    }
+    void printGraph();
 
 
 signals:

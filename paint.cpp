@@ -8,6 +8,7 @@
 
 #include<QRectF>
 #include<QMouseEvent>
+#include <vector>
 
 paint::paint(const Graph& model,QWidget *parent)
     : QWidget(parent),model(model)
@@ -38,4 +39,17 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                  , 20
                  , 20);
     }
+
+    for(int i=0; i < model.getSize();i++)
+        {
+            p.setPen(QPen(Qt::black) );
+            vector<int> edges = model.getEdges(i);
+            size_t numEdges = edges.size();
+
+            for(size_t k = 0; k< numEdges;k++)
+            p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
+                        , static_cast<int> (model.getCoord(i).second * hoehe)
+                        , static_cast<int>(model.getCoord(edges[k]).first * breite)
+                        , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
+        }
 }

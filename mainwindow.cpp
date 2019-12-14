@@ -9,16 +9,20 @@
 #include "Graph.h"
 #include "paint.h"
 #include "control.h"
+#include <string>
+
+//class Graph;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     // ui->actionBeenden();
-    Graph *model                      = new Graph();
+    model                      = new Graph(this);
     paint *view          = new paint(*model);
-    control *controller = new control(*model,*view);
+    /*control *controller =*/ new control(*model,*view);
 
+    //control::modus = 1;
     setCentralWidget(view);
 }
 
@@ -70,4 +74,28 @@ void MainWindow::on_action_ffnen_triggered()
         if ( datei . open ( QIODevice :: ReadOnly | QIODevice :: Text ) )
             ui->setPlainText ( QString::fromUtf8(datei.readAll())) ;
 }*/
+}
+
+void MainWindow::on_actionKnoten_zeichnen_triggered()
+{
+   //control::setMode(1);
+
+}
+
+void MainWindow::on_actionVerbinden_triggered()
+{
+    //control::setMode(2);
+}
+
+void MainWindow::on_actionSpeichern_unter_triggered()
+{
+    QString nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+    if(!nameAkt.isEmpty())
+     {
+        qDebug() << nameAkt;
+        qDebug() << nameAkt.toUtf8();
+
+        model->writeToFile(nameAkt.toUtf8().constData());
+
+    }
 }
