@@ -8,6 +8,7 @@
 #include <cmath>
 #include <fstream>
 #include <QString>
+#include <QDebug>
 
 #include <QObject>
 using namespace std;
@@ -22,7 +23,7 @@ class Graph:public QObject
 {
     Q_OBJECT
 
-    bool GERICHTET;
+    bool GERICHTET = false;
 
 
     // construct a vector of pairs of doubles to save the coordinates of the nodes;
@@ -35,7 +36,7 @@ class Graph:public QObject
     size_t _numEdges=0;
 
     // construct a vector of vectors to represent an adjacency list
-    vector<vector<int>> adjList;
+    vector<vector<size_t>> adjList;
 
 public:
 
@@ -59,6 +60,8 @@ public:
             addEdge(edge.src,edge.dest);
     }
 
+    //Hier sollen 2 Indizes gespeichert werden von zu verbindenden KNoten
+    int toConnect[2] = {-1,-1} ;
 
     //Graph Konsturktor zum laden mit Datei
     // Initialisierungskonstruktor von Datei
@@ -75,12 +78,14 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //Wenn es kein Eulerkreis ist, dann ist der erste Eintrag vom vector = -1 als Signalwert
     vector<int> pruefeEulerKreis() const;
 
+    //Liefert den Grad des Knotens mit index i
+    size_t getDegree(size_t i);
 
 
     //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
-    vector<int> getEdges(size_t i) const
+    vector<size_t> getEdges(size_t i) const
     {
-        vector<int> edges = adjList[i];
+        vector<size_t> edges = adjList[i];
         return edges;
     }
 
@@ -107,7 +112,11 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //gib die koordinaten zu dem i-ten Knoten
     pair<double,double> getCoord(size_t i) const
     {
-        return _coordList[i];
+        if (i >= _numNodes)
+           qDebug() << "Fehler bei get Coord" ;
+        //qDebug() << _numEdges << " " << i;
+        else
+            return _coordList[i];
     }
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
@@ -122,7 +131,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //mit Radius "nodeRadius" um den Mittelpunkt des Knotens (x,y) liegt
     //Es wird der index des "geklickten" Knotens zurückgegeben
     //Wird keiner gefunden wird "-1" als SIgnalwert zurückgegeben
-    int clickedOnNode(double _x, double _y, double nodeRadius = 0.01);
+    int clickedOnNode(double _x, double _y, double nodeRadius = 0.03);
 
 
 

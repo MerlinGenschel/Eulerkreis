@@ -50,14 +50,21 @@ void control::mousePressEvent(QMouseEvent* event)
 
        if(event->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))  //VerbindenModus
         {
-            qDebug() << "Verbinden";
-            toConnect[NullOderEins] = model.clickedOnNode(_x,_y);
-            control::NullOderEins = (NullOderEins+1)%2;
-            qDebug() << toConnect[0];
-            qDebug() << toConnect[1];
-            if((toConnect[0]!=-1  && toConnect[1]!=-1))
+            //qDebug() << "Verbinden";
+            if(model.clickedOnNode(_x,_y)!=-1)
             {
-                model.addEdge(toConnect[0],toConnect[1]);
+                model.toConnect[NullOderEins] = model.clickedOnNode(_x,_y);
+                control::NullOderEins = (NullOderEins+1)%2;
+                emit(model.graphChanged());
+            }
+            //qDebug() << toConnect[0];
+            //qDebug() << toConnect[1];
+            if((model.toConnect[0]!=-1  && model.toConnect[1]!=-1))
+            {
+                model.addEdge(model.toConnect[0],model.toConnect[1]);
+                model.toConnect[0]=-1;
+                model.toConnect[1]=-1;
+
             }
 
         }
@@ -74,7 +81,7 @@ void control::mousePressEvent(QMouseEvent* event)
     }
    else if(event->button() == Qt::RightButton)
     {
-           size_t index = model.clickedOnNode(_x,_y);
+           int index = model.clickedOnNode(_x,_y);
            if (index != -1)
                    model.removeNode(index);
     }

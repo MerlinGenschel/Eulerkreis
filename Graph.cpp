@@ -54,6 +54,17 @@ Graph::Graph(const string &dateiName, bool gerichtet)
 
 }
 
+size_t Graph::getDegree(size_t i)
+{
+
+    qDebug()<< "getdegree von" << i << " aufgerufen";
+
+    if(i >= _numNodes)
+          return -1;
+        qDebug()<<adjList[i].size();
+    return adjList[i].size();
+}
+
 bool Graph::writeToFile(const string &dateiName)
 {
     //TODO:
@@ -93,29 +104,47 @@ bool Graph::addNode(double x, double y)
     adjList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
     emit(graphChanged());
+    //printGraph();
     return true;
 }
 
 bool Graph::removeNode(size_t index)
 {
-    if (index > _numNodes || index < 0)
+    if (index >= _numNodes || index < 0)
         return false;
+    printGraph();
+    //eingehende Kanten?
+   // qDebug() << "numNodes " << _numNodes<< " adjList.size() " << adjList.size();
+    for (size_t i = 0; i < adjList.size();i++)
+    {
+        size_t y = adjList.size();
+        //qDebug() << getDegree(i);
+        for(int j = int(getDegree(i))-1; j>= 0 ;j--)
+         {
+            qDebug()<< adjList.at(i).size();
 
-    //prüfe ob es eingehende Kanten gibt
-    for (int i = 0; i < _numNodes;i++)
-        for (int k= adjList[i].size()-1; k>=0;k--)
-        {
-            if(adjList[i][k]==index)
-                adjList[i].erase(adjList[i].begin()+k);
 
-            //nachrücken
-            if(adjList[i][k]>index)
-                adjList[i][k]--;
-            //cout << adjList[i][k];
-        }
-    adjList.erase(adjList.begin()+index);
-    _coordList.erase(_coordList.begin()+index);
-    _numNodes--;
+            //qDebug() << "Kanten von "<< i << "nach " << j;
+             if (adjList.at(i).size() == index)
+             {
+                 adjList.at(i).erase(adjList.at(i).begin()+j);
+                 _numEdges--;
+             }
+
+             //Nachrücken
+             if(adjList.at(i).at(j)>index)
+                 adjList.at(i).at(j)--;
+
+           }
+      }
+             if(!GERICHTET)
+                 _numEdges -= adjList[index].size();
+
+             adjList.erase(adjList.begin()+index);
+             _coordList.erase(_coordList.begin()+index);
+             _numNodes--;
+
+
     emit(graphChanged());
 
 
@@ -132,11 +161,12 @@ bool Graph::addEdge(size_t src, size_t dest)
 
     adjList[src].push_back(dest);
     _numEdges++;
+    qDebug()<< "src ="<<src<<" adjList(src).size()=" << adjList[src].size();
 
     if (!GERICHTET)
         adjList[dest].push_back(src);
     emit(graphChanged());
-
+    //printGraph();
     return true;
 }
 
@@ -164,6 +194,7 @@ int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
         if( pow((_x-x),2) + pow((_y-y),2) < pow(nodeRadius,2) )
         {
          //                                                                                                                                             qDebug() << "gefunden";
+            qDebug()<< "clicked on node liefert index "<< index;
             return index;
         }
     }
@@ -186,6 +217,5 @@ void Graph::printGraph()
         //print coordinates
 
         qDebug() <<  "x= " <<  getCoord(i).first <<"y= " << getCoord(i).second;
-        qDebug() <<endl;
     }
 }

@@ -33,8 +33,7 @@ class control : public QObject
 
     std::size_t activeNode = std::numeric_limits<std::size_t>::max(); // Index des angeklickten/ausgewählten Quadrats
 
-    //Hier sollen 2 Indizes gespeichert werden von zu verbindenden KNoten
-    int toConnect[2] = {-1,-1} ;
+
 
 
 
@@ -49,6 +48,7 @@ public:
     control(Graph& model, paint& view,QObject *parent=nullptr);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
+
 
     /*
     static void setMode(size_t i)
