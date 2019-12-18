@@ -91,14 +91,7 @@ void control::mousePressEvent(QMouseEvent* event)
            undoStack->push(new moveCommand(&model, activeNode, newPos));
            }
            //verschieben--> Alexej
-int index = model.clickedOnNode(_x,_y);
-           if (index != -1)
-           {
-           QPointF newPos(event->x()/static_cast<double>(view.width())
-                          , event->y()/static_cast<double>(view.height()));
 
-           undoStack->push(new moveCommand(&model, activeNode, newPos));
-           }
 
     }
 
