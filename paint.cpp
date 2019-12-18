@@ -53,10 +53,10 @@ void paint::paintEvent(QPaintEvent* /*event*/)
 
     }
 
-    for(int i=0; i < model.getSize();i++)
+    for(size_t i=0; i < model.getSize();i++)
         {
             p.setPen(QPen(Qt::black) );
-            vector<size_t> edges = model.getEdges(i);
+            vector<int> edges = model.getEdges(i);
             size_t numEdges = edges.size();
 
             for(size_t k = 0; k< numEdges;k++)

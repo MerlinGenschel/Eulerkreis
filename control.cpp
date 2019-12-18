@@ -78,8 +78,13 @@ void control::mousePressEvent(QMouseEvent* event)
    else if (event->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
     {
            //verschieben--> Alexej
+           qDebug() <<"Teste Eulerweg";
+           model.printEulerWeg();
+           //model.printGraph();
     }
-   else if(event->button() == Qt::RightButton)
+
+
+       else if(event->button() == Qt::RightButton)  //Löschen Modus
     {
            int index = model.clickedOnNode(_x,_y);
            if (index != -1)

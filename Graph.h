@@ -30,13 +30,16 @@ class Graph:public QObject
     vector<pair<double,double>> _coordList;
 
     //Number of Nodes in the graph;
-    size_t _numNodes=0;
+    int _numNodes=0;
 
     //Number of Edges in the graph;
-    size_t _numEdges=0;
+    int _numEdges=0;
 
     // construct a vector of vectors to represent an adjacency list
-    vector<vector<size_t>> adjList;
+    vector<vector<int>> adjList;
+
+    // a copy of the adjacency list to be modified within the algorithm
+    vector<vector<int>> adjList_Algo;
 
 public:
 
@@ -79,14 +82,15 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     vector<int> pruefeEulerKreis() const;
 
     //Liefert den Grad des Knotens mit index i
-    size_t getDegree(size_t i);
+    int getDegree(int i);
 
 
     //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
-    vector<size_t> getEdges(size_t i) const
+    vector<int> getEdges(int i) const
     {
-        vector<size_t> edges = adjList[i];
-        return edges;
+        if (i<0|| i> _numNodes)
+            qDebug()<< "Fehler bei getEdges()";
+        return adjList[i];
     }
 
     bool writeToFile(string const& dateiName);
@@ -97,23 +101,37 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     bool addNode(double x, double y);
 
     //entferne den Knoten mit der Nummer index
-    bool removeNode(size_t index);
+    bool removeNode(int index);
 
+    //Entfernt eine Kante - wird nur im Algo benutzt
+    void rmvEdge(int src, int dest);
 
     //füge Kante zwischen src und dest hinzu
-    bool addEdge(size_t src, size_t dest);
+    bool addEdge(int src, int dest);
+
+    //füge Kante zwischen src und dest hinzu, operiert auf der Kopie der Adjazenzliste und wird nur im Algo benutzt
+    bool addEdge_Algo(int src, int dest)
+    {
+        if((src <0 || dest< 0)
+                ||(abs(max(src,dest))>=_numNodes) )
+            return false;
+        adjList_Algo[src].push_back(dest);
+        if(!GERICHTET)
+            adjList_Algo[dest].push_back(src);
+        return true;
+    }
 
     //gib Anzahl der Knoten
     int getSize() const
     {
-        return adjList.size();
+        return _numNodes;
     }
 
     //gib die koordinaten zu dem i-ten Knoten
-    pair<double,double> getCoord(size_t i) const
+    pair<double,double> getCoord(int i) const
     {
-        if (i >= _numNodes)
-           qDebug() << "Fehler bei get Coord" ;
+        if (i >= _numNodes || i<0)
+           qDebug() << "Fehler bei get Coord, denn i="<<i<<" >= _numNodes="<<_numNodes  ;
         //qDebug() << _numEdges << " " << i;
         else
             return _coordList[i];
@@ -121,7 +139,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
     //nach (X,Y)
-    bool moveNodeTo(size_t index, double X, double Y);
+    bool moveNodeTo(int index, double X, double Y);
 
 
 
@@ -132,6 +150,18 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //Es wird der index des "geklickten" Knotens zurückgegeben
     //Wird keiner gefunden wird "-1" als SIgnalwert zurückgegeben
     int clickedOnNode(double _x, double _y, double nodeRadius = 0.03);
+
+
+    // Methods to print Eulerian tour
+      void printEulerWeg();
+      void printEulerUtil(int u);
+
+      // This function returns count of vertices reachable from v. It does DFS
+      int Tiefensuche(int v, vector<bool> besucht);
+
+      // Utility function to check if edge u-v is a valid next edge in
+      // Eulerian trail or circuit
+      bool gueltigeNaechsteKante(int src, int dest);
 
 
 
