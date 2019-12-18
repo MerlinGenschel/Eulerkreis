@@ -10,8 +10,8 @@
 #include <QApplication>
 
 // Eventfilter um die Ereignise von der Ansicht abzufangen : MVC: die Ereignise werden von der Steuerung verarbeitet
-control::control(Graph &model, paint& view, QObject *parent)
-    :QObject(parent), model(model),view(view)
+control::control(Graph &model, paint& view, QUndoStack *undoStack, QObject *parent)
+    :QObject(parent), model(model),view(view), undoStack(undoStack)
 {
     view.installEventFilter(this);
 }
@@ -66,11 +66,12 @@ void control::mousePressEvent(QMouseEvent* event)
                 model.toConnect[1]=-1;
 
             }
+            //undoStack mit einbinden Isi
 
         }
    else if(event->button() == Qt::LeftButton)  //ZeichnenModus
     {
-
+        //undoStack einfügen Isi
         model.addNode(_x,_y);
     }
 
@@ -78,12 +79,14 @@ void control::mousePressEvent(QMouseEvent* event)
    else if (event->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
     {
            //verschieben--> Alexej
+           //undoStack Isi
     }
    else if(event->button() == Qt::RightButton)
     {
            int index = model.clickedOnNode(_x,_y);
            if (index != -1)
                    model.removeNode(index);
+           //undoStack Isi
     }
 
 

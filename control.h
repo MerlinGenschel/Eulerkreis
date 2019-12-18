@@ -6,9 +6,10 @@
 #include<QPen>
 #include <iostream>;
 
+
 class QMouseEvent;
 class QKeyEvent;
-
+class QUndoStack;
 
 class paint;    //View
 class Graph;    //Modell
@@ -21,7 +22,7 @@ class control : public QObject
 
     paint& view;
     Graph& model;
-
+    QUndoStack *undoStack = nullptr;
 
 
     // Methoden um die Events zu handhaben, sie werden durch eventFilter und nicht automatisch aufgerufen
@@ -45,7 +46,7 @@ public:
 
     //static int modus;
 //*** Konstruktoren ***//
-    control(Graph& model, paint& view,QObject *parent=nullptr);
+    control(Graph& model, paint& view, QUndoStack *undoStack, QObject *parent=nullptr);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
 

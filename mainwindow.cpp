@@ -1,29 +1,39 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QDebug>
 #include "dockwidget.h"
 #include "dialoghelp.h"
-#include <QFileDialog>
-#include <QCloseEvent>
 #include "Graph.h"
 #include "paint.h"
 #include "control.h"
+
+#include <QMessageBox>
+#include <QDebug>
+#include <QFileDialog>
+#include <QCloseEvent>
+#include <QUndoStack>
 #include <string>
 
 //class Graph;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+    QUndoStack *undoStack = new QUndoStack(this);
     // ui->actionBeenden();
     model                      = new Graph(this);
     paint *view          = new paint(*model);
-    /*control *controller =*/ new control(*model,*view);
+    /*control *controller =*/ new control(*model,*view, undoStack, this);
 
     //control::modus = 1;
     setCentralWidget(view);
+
+    undo = undoStack->createUndoAction(this);
+    redo = undoStack->createRedoAction(this);
+    ui->toolBar->addAction(undo);
+    ui->toolBar->addAction(redo);
 }
 
 MainWindow::~MainWindow()
@@ -67,13 +77,18 @@ void MainWindow::on_actionBedienungsanleitung_triggered()
 
 void MainWindow::on_action_ffnen_triggered()
 {
-    QString name = QFileDialog::getOpenFileName(this,"Datei öffnen","/Home");
-   /* if(!name.isEmpty())
+ /*   QString nameAkt = QFileDialog::getOpenFileName(this,"Datei öffnen","/Home");
+    if(!nameAkt.isEmpty())
+        model->readFromFile(nameAkt.fromUtf8().constData());
+*/
+    QString nameAkt = QFileDialog::getOpenFileName(this, tr("Datei laden"),"*.txt");
+    if(!nameAkt.isEmpty())
     {
-        QFile datei(name);
-        if ( datei . open ( QIODevice :: ReadOnly | QIODevice :: Text ) )
-            ui->setPlainText ( QString::fromUtf8(datei.readAll())) ;
-}*/
+        QFile file;
+        file.open(QIODevice::ReadOnly);
+        QDataStream instream(&file);
+        file.close();
+     }
 }
 
 void MainWindow::on_actionKnoten_zeichnen_triggered()
@@ -99,3 +114,24 @@ void MainWindow::on_actionSpeichern_unter_triggered()
 
     }
 }
+
+void MainWindow::on_actionSpeichern_triggered()
+{
+    QString nameAkt;
+    if (nameAkt.isEmpty())
+    {
+        QString nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+        model->writeToFile(nameAkt.toUtf8().constData());
+    }
+    else
+        if (!nameAkt.isEmpty())
+        model->writeToFile(nameAkt.toUtf8().constData());
+
+}
+
+void MainWindow::on_actionEulerkreis_triggered()
+{
+    //bei klick: check, ob Eulerkreis
+}
+
+

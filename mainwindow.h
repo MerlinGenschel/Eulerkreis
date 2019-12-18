@@ -33,7 +33,14 @@ private slots:
 
     void on_actionSpeichern_unter_triggered();
 
+    void on_actionSpeichern_triggered();
+
+
+    void on_actionEulerkreis_triggered();
+
 private:
     Ui::MainWindow *ui;
+    QAction *undo;
+    QAction *redo;
 };
 #endif // MAINWINDOW_H
