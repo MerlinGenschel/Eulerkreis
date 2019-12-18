@@ -163,15 +163,18 @@ bool Graph::removeNode(int index)
              return true;
 }
 
-void Graph::rmvEdge(int u, int v)
+void Graph::rmvEdge(int src, int dest)
 {
-    // Find v in adjacency list of u and replace it with -1
-     vector<int>::iterator iv = find(adjList_Algo[u].begin(), adjList_Algo[u].end(), v);
-     *iv = -1;
+    // Finde dest in Adjazenzliste von src und ersetze mit -1
+     vector<int>::iterator idest = find(adjList_Algo[src].begin(), adjList_Algo[src].end(), dest);
+     *idest = -1;
 
-     // Find u in adjacency list of v and replace it with -1
-     vector<int>::iterator iu = find(adjList_Algo[v].begin(), adjList_Algo[v].end(), u);
-     *iu = -1;
+     if(!GERICHTET)
+     {
+     //  Finde src in Adjazenzliste von dest und ersetze mit -1
+     vector<int>::iterator isrc = find(adjList_Algo[dest].begin(), adjList_Algo[dest].end(), src);
+     *isrc = -1;
+}
 }
 
 bool Graph::addEdge(int src, int dest)
@@ -236,7 +239,7 @@ void Graph::printEulerWeg()
          if (adjList_Algo[i].size() & 1)
            {   u = i; break;  }
 
-     // Print tour starting from oddv
+     // EUlerweg ausgehend von u
      printEulerUtil(u);
      cout << endl;
 }
@@ -244,13 +247,13 @@ void Graph::printEulerWeg()
 void Graph::printEulerUtil(int u)
 {
         qDebug() << "in printeEulerUtil()";
-    // Recur for all the vertices adjacent to this vertex
+    // Gehe alle Nachbarn durch
       //list<int>::iterator i;
       for (auto i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
       {
           int v = *i;
 
-          // If edge u-v is not removed and it's a a valid next edge
+          // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
           if (v != -1 && gueltigeNaechsteKante(u, v))
           {
               cout << u << "-" << v << "  ";
@@ -263,11 +266,11 @@ void Graph::printEulerUtil(int u)
 int Graph::Tiefensuche(int v, vector<bool> besucht)
 {
 
-    // Mark the current node as visited
+    // Markiere v als besucht
       besucht[v] = true;
       int count = 1;
 
-      // Recur for all vertices adjacent to this vertex
+      // Für alle nachbarn von v
 
       for (vector<int>::iterator i = adjList_Algo[v].begin(); i != adjList_Algo[v].end(); ++i)
         {
@@ -282,14 +285,14 @@ int Graph::Tiefensuche(int v, vector<bool> besucht)
 bool Graph::gueltigeNaechsteKante(int src, int dest)
 {
         qDebug() << "in gueltigeNaechsteKante()";
-    // The edge u-v is valid in one of the following two cases:
+    // Kante src-dest ist gültig wenn:
 
-    // 1) If v is the only adjacent vertex of u
-    int count = 0;  // To store count of adjacent vertices
+    // 1) dest ist einziger Nachbar von src
+    int count = 0;  // Bestimmt grad von src
     //list<int>::iterator i;
     for (auto i = adjList_Algo[src].begin(); i != adjList_Algo[src].end(); ++i)
        if (*i != -1)
-          count++;
+          count++;          //Zähle nur kanten (!=-1)
     if (count == 1)
     {
         qDebug()<< "nextEdge return: true";
@@ -297,22 +300,21 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
     }
 
 
-    // 2) If there are multiple adjacents, then u-v is not a bridge
-    // Do following steps to check if u-v is a bridge
+    // 2) Wenn es mehrere nachbarn gibt, ist src-dest keine Brücke
+    // Prüfe nun ob src-dest eine Brücke ist
 
-    // 2.a) count of vertices reachable from u
+    // 2.a) Zähle die von src erreichbaren Knoten (Mit Tiefensuche)
     vector<bool> visited;
     visited.resize(_numNodes);
     std::fill(visited.begin(), visited.end(),false);
     int count1 = Tiefensuche(src, visited);
 
-    // 2.b) Remove edge (u, v) and after removing the edge, count
-    // vertices reachable from u
+    // 2.b) Entferne (src-dest) und zähle nun nochmal die von src erreichbaren Knoten
     rmvEdge(src, dest);
     std::fill(visited.begin(), visited.end(),false);
     int count2 = Tiefensuche(src, visited);
 
-    // 2.c) Add the edge back to the graph
+    // 2.c) füge die Kante wieder hinzu
     addEdge_Algo(src, dest);
 
         qDebug()<< "nextEdge return:  bool(count1 <= count2)  count1 =" << count1 << " count2= "<< count2;
