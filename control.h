@@ -2,9 +2,9 @@
 #define CONTROL_H
 
 #include <QObject>
-#include<QPolygonF>
-#include<QPen>
-#include <iostream>;
+#include <QPolygonF>
+#include <QPen>
+#include <iostream>
 
 
 class QMouseEvent;

@@ -22,7 +22,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     control.cpp \
-    paint.cpp
+    paint.cpp \
+    commands/moveCommand.cpp
 
 HEADERS += \
     Graph.h \
@@ -30,7 +31,8 @@ HEADERS += \
     dockwidget.h \
     mainwindow.h \
     control.h \
-    paint.h
+    paint.h \
+    commands/moveCommand.h
 
 FORMS += \
     dialoghelp.ui \
