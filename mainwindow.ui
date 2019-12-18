@@ -14,7 +14,9 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/file/img/owl.jpg"/>
+   <iconset theme=":/file/img/owl.jpg">
+    <normaloff>.</normaloff>
+    <normalon>:/file/img/stop.jpg</normalon>.</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -45,7 +47,9 @@
     <addaction name="actionKnotenliste"/>
     <addaction name="actionVerschieben"/>
     <addaction name="actionL_schen"/>
+    <addaction name="actionR_ckgangig"/>
     <addaction name="actionWiederherstellen"/>
+    <addaction name="actionEulerkreis"/>
    </widget>
    <widget class="QMenu" name="menuHilfe">
     <property name="title">
@@ -73,6 +77,7 @@
    <addaction name="actionKnotenliste"/>
    <addaction name="actionVerschieben"/>
    <addaction name="actionL_schen"/>
+   <addaction name="actionEulerkreis"/>
   </widget>
   <action name="actionNeu">
    <property name="text">
@@ -132,6 +137,27 @@
   <action name="actionL_schen">
    <property name="text">
     <string>Löschen</string>
+   </property>
+  </action>
+  <action name="actionEulerkreis">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>:/file/img/owl.jpg</normaloff>
+     <activeoff>:/file/img/stop.jpg</activeoff>:/file/img/owl.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>Eulerkreis</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionR_ckgangig">
+   <property name="text">
+    <string>Rückgangig</string>
    </property>
   </action>
  </widget>
