@@ -91,9 +91,12 @@ void control::mousePressEvent(QMouseEvent* event)
            undoStack->push(new moveCommand(&model, activeNode, newPos));
            }
            //verschieben--> Alexej
-           //undoStack Isi
+
+
     }
-   else if(event->button() == Qt::RightButton)
+
+
+       else if(event->button() == Qt::RightButton)  //Löschen Modus
     {
            int index = model.clickedOnNode(_x,_y);
            if (index != -1)
@@ -103,6 +106,7 @@ void control::mousePressEvent(QMouseEvent* event)
 
 
 }
+
 
 /*
 void control::mouseMoveEvent(QMouseEvent* event)
