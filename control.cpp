@@ -96,7 +96,7 @@ void control::mousePressEvent(QMouseEvent* event)
     }
 
 
-       else if(event->button() == Qt::RightButton)  //Löschen Modus
+    else if(event->button() == Qt::RightButton)  //Löschen Modus
     {
            int index = model.clickedOnNode(_x,_y);
            if (index != -1)

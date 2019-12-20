@@ -13,12 +13,12 @@
 #include <QObject>
 using namespace std;
 
-// data structure to store graph edges
+//Datenstruktur für die Kanten
 struct Edge {
     int src, dest;
 };
 
-// class to represent a graph object
+// Klasse die einen Graphen representiert
 class Graph:public QObject
 {
     Q_OBJECT
@@ -26,19 +26,19 @@ class Graph:public QObject
     bool GERICHTET = false;
 
 
-    // construct a vector of pairs of doubles to save the coordinates of the nodes;
+    //Kontruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
     vector<pair<double,double>> _coordList;
 
-    //Number of Nodes in the graph;
+    //Anzahl der Knoten in dem Graph;
     int _numNodes=0;
 
-    //Number of Edges in the graph;
+    //Anzahl der Kanten im Graph - evtl unnötig;
     int _numEdges=0;
 
-    // construct a vector of vectors to represent an adjacency list
+    // Vector von vectoren von ints - die Adjazenzliste
     vector<vector<int>> adjList;
 
-    // a copy of the adjacency list to be modified within the algorithm
+    // Kopie der Adjazenzliste welche später im Algorithmus modifiziert wird
     vector<vector<int>> adjList_Algo;
 
 public:
@@ -55,10 +55,10 @@ public:
     Graph(vector<Edge> const &edges, int N,vector<pair<double,double>> coordList,bool gerichtet = 0)
     :_coordList(coordList),_numNodes(N),GERICHTET(gerichtet)
     {
-        // resize the vector to N elements of type vector<int>
+        // ändere Größe von der adjazenzliste
         adjList.resize(N);
 
-        // add edges to the directed graph
+        // Füge die kanten hinzu
         for (auto &edge: edges)
             addEdge(edge.src,edge.dest);
     }
@@ -156,16 +156,15 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
       void printEulerWeg();
       void printEulerUtil(int u);
 
-      // This function returns count of vertices reachable from v. It does DFS
+      // Zähle die von v erreichbaren Knoten mit Tiefensuche
       int Tiefensuche(int v, vector<bool> besucht);
 
-      // Utility function to check if edge u-v is a valid next edge in
-      // Eulerian trail or circuit
+      // Finde heraus ob src-dest eine gültige nächste Kante ist
       bool gueltigeNaechsteKante(int src, int dest);
 
 
 
-// print adjacency list representation of graph
+// gebe die Anjazenzliste des Graphen aus
     void printGraph();
 
 
@@ -176,48 +175,3 @@ signals:
 };
 
 #endif // GRAPH_H
-
-
-/*
-// Graph Implementation using STL
-int main()
-{
-    // vector of graph edges as per above diagram.
-    // Please note that initialization vector in below format will
-    // work fine in C++11, C++14, C++17 but will fail in C++98.
-    vector<Edge> edges =
-    {
-        { 0, 1 }, { 1, 2 }, { 2, 0 },
-        { 3, 2 }, { 5, 4 }
-    };
-
-    //vector of pairs of doubles for the coordinates
-    vector<pair<double,double>> coordList =
-    {
-        std::make_pair ( 0.245, 0.1 ),std::make_pair  ( 0.51, 0.42 ),
-        std::make_pair ( 0.32, 0.73 ),std::make_pair  ( 0.32, 0.1 ),
-        std::make_pair ( 0.63, 0.12 ),std::make_pair  ( 0.34, 0.75 )
-    };
-
-    // Number of nodes in the graph
-    int N = 6;
-
-    // construct graph
-    Graph graph(edges,N,coordList,false);
-    cout<< "graph1" << endl;
-    graph.printGraph();
-
-
-    // print adjacency list representation of graph
-
-
-    //write Graph to file
-    graph.writeToFile("test.txt");
-
-    //construct Graph from file
-    Graph graph2("test.txt");
-    cout << "graph2" << endl;
-    graph2.printGraph();
-    return 0;
-}
-*/
