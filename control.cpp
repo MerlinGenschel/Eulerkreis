@@ -57,6 +57,7 @@ void control::mousePressEvent(QMouseEvent* event)
             //qDebug() << "Verbinden";
             if(model.clickedOnNode(_x,_y)!=-1)
             {
+                //an methode in Graph delegieren, dort auch signal aussenden
                 model.toConnect[NullOderEins] = model.clickedOnNode(_x,_y);
                 control::NullOderEins = (NullOderEins+1)%2;
                 emit(model.graphChanged());
@@ -80,7 +81,7 @@ void control::mousePressEvent(QMouseEvent* event)
     }
 
 
-   else if (event->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
+   else if (event->button() == Qt::RightButton && event->modifiers() & Qt::Key_Shift)
     {
            int index = model.clickedOnNode(_x,_y);
            if (index != -1)

@@ -3,6 +3,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDockWidget>
+#include "Graph.h"
+#include <QDebug>
 
 namespace Ui {
 class DockWidget;
@@ -13,7 +15,7 @@ class DockWidget : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit DockWidget(QWidget *parent = nullptr);
+    explicit DockWidget(Graph& Graphmodel,QWidget *parent = nullptr);
     ~DockWidget();
 
 private:

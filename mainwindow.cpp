@@ -58,7 +58,7 @@ void MainWindow::on_actionBeenden_triggered()
 
 void MainWindow::on_actionKnotenliste_triggered()
 {
-    DockWidget* dock = new DockWidget(this);
+    DockWidget* dock = new DockWidget(*model,this);
 
     addDockWidget(Qt::LeftDockWidgetArea, dock);
    // DockWidget liste;

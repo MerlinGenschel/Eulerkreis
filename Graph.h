@@ -152,7 +152,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     int clickedOnNode(double _x, double _y, double nodeRadius = 0.03);
 
 
-    // Methods to print Eulerian tour
+    // Methoden zur Ausgabe des Eulerwegs
       void printEulerWeg();
       void printEulerUtil(int u);
 
