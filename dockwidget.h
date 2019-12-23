@@ -13,14 +13,24 @@ class DockWidget;
 class DockWidget : public QDockWidget
 {
     Q_OBJECT
+private:
+    Ui::DockWidget *ui;
+    QStringListModel* model;
+    Graph& Graphmodel;
+
 
 public:
     explicit DockWidget(Graph& Graphmodel,QWidget *parent = nullptr);
     ~DockWidget();
 
-private:
-    Ui::DockWidget *ui;
-    QStringListModel* model;
+void fillKnotenListe();
+
+public slots:
+    void updateKnotenListe()
+    {
+        fillKnotenListe();
+    }
+
 };
 
 #endif // DOCKWIDGET_H

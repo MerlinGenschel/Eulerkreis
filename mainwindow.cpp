@@ -56,15 +56,15 @@ void MainWindow::on_actionBeenden_triggered()
 
 }
 
+//Erstelle neues DockWidget zur Anzeige der KnotenListe / Adjazenzliste
 void MainWindow::on_actionKnotenliste_triggered()
 {
     DockWidget* dock = new DockWidget(*model,this);
-
     addDockWidget(Qt::LeftDockWidgetArea, dock);
-   // DockWidget liste;
-    //liste.show();
-    //ui->setupUi(QDockWidget::DockWidget);
-    //setCentralWidget(widget);
+
+    //Verbinde den "graphChanged" mit "updateKnotenListe"
+    connect(model, &Graph::graphChanged,dock,&DockWidget::updateKnotenListe);
+
 }
 
 void MainWindow::on_actionBedienungsanleitung_triggered()

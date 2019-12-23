@@ -3,34 +3,12 @@
 #include <sstream>
 
 DockWidget::DockWidget(Graph& Graphmodel,QWidget *parent) :
-    QDockWidget(parent),
+    QDockWidget(parent),Graphmodel(Graphmodel),
     ui(new Ui::DockWidget)
 {
     ui->setupUi(this);
 
-            string test;
-    for(int i = 0; i< Graphmodel.getSize();i++)
-    {
-
-        vector<int> edgesI = Graphmodel.getEdges(i);
-        for(int j = 0; j< edgesI.size();j++)
-        {
-            std::stringstream ss;
-            ss << edgesI[j];
-            string out_string = ss.str();
-            test.append(out_string);
-            test.append(", ");
-        }
-        test.append("\n");
-    }
-
-    qDebug() << "test" << test.c_str();
-
-     model = new QStringListModel(this);
-    QStringList knotenListe;
-    knotenListe << QString::fromStdString(test);
-    model->setStringList(knotenListe);
-    ui->knotenListe->setModel(model);
+    fillKnotenListe();
 
 
 
@@ -46,4 +24,30 @@ DockWidget::DockWidget(Graph& Graphmodel,QWidget *parent) :
 DockWidget::~DockWidget()
 {
     delete ui;
+}
+
+void DockWidget::fillKnotenListe()
+{
+    string test;
+for(int i = 0; i< Graphmodel.getSize();i++)
+{
+vector<int> edgesI = Graphmodel.getEdges(i);
+test.append(std::to_string(i));
+test.append(": \t\t");
+for(int j = 0; j< edgesI.size();j++)
+{
+    string out_string = std::to_string(edgesI[j]);
+    test.append(out_string);
+    test.append(", ");
+    qDebug()<<edgesI[j];
+}
+test.append("\n");
+}
+
+
+model = new QStringListModel(this);
+QStringList knotenListe;
+knotenListe << QString::fromStdString(test);
+model->setStringList(knotenListe);
+ui->knotenListe->setModel(model);
 }

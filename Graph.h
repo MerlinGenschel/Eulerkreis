@@ -93,32 +93,38 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
         return adjList[i];
     }
 
-    bool writeToFile(string const& dateiName);
+    //Schreibe den Graphen in eine Datei
+    //Es wird davon ausgegangen, dass die Datei erstellt/ überschrieben werden darf
+    void writeToFile(string const& dateiName);
 
-    bool readFromFile(string const& dateiName);
+    //Überschreibt den aktuellen Graphen mit dem der in der übergebenen Datei gespeichert ist.
+    //Es wird davon ausgegangen, dass der aktuelle Graph überschrieben werden darf
+    void readFromFile(string const& dateiName);
 
     //füge neuen KNoten mit (x,y) Koordinaten hinzu
-    bool addNode(double x, double y);
+    void addNode(double x, double y);
 
     //entferne den Knoten mit der Nummer index
-    bool removeNode(int index);
+    void removeNode(int index);
 
     //Entfernt eine Kante - wird nur im Algo benutzt
     void rmvEdge(int src, int dest);
 
     //füge Kante zwischen src und dest hinzu
-    bool addEdge(int src, int dest);
+    void addEdge(int src, int dest);
 
     //füge Kante zwischen src und dest hinzu, operiert auf der Kopie der Adjazenzliste und wird nur im Algo benutzt
-    bool addEdge_Algo(int src, int dest)
+    void addEdge_Algo(int src, int dest)
     {
-        if((src <0 || dest< 0)
-                ||(abs(max(src,dest))>=_numNodes) )
-            return false;
+        if(!((src <0 || dest< 0)
+                ||(abs(max(src,dest))>=_numNodes) ))
+        {
         adjList_Algo[src].push_back(dest);
         if(!GERICHTET)
             adjList_Algo[dest].push_back(src);
-        return true;
+        }
+        else
+            qDebug()<< "addedge_Algo hat ungültge Parameter bekommen";
     }
 
     //gib Anzahl der Knoten
@@ -139,7 +145,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
     //nach (X,Y)
-    bool moveNodeTo(int index, double X, double Y);
+    void moveNodeTo(int index, double X, double Y);
 
 
 

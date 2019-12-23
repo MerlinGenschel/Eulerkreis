@@ -37,7 +37,6 @@ Graph::Graph(const string &dateiName, bool gerichtet)
 
 
     /***  lese Kanten aus  ***/
-    cout << "nKanten = "<<nKanten<<endl;
     for ( int i = 0 ;  i < nKanten ;  ++i )
     {
         string fuss, kopf;
@@ -64,12 +63,10 @@ int Graph::getDegree(int i)
     return adjList.at(i).size();
 }
 
-bool Graph::writeToFile(const string &dateiName)
+void Graph::writeToFile(const string &dateiName)
 {
-    //TODO:
-    //Evtl Prüfen, ob damit etwas überschrieben wird
-    //qDebug() << "write to file, jetzt printgraph";
-    //printGraph();
+
+    //TODO:: Evtl Noch auf gültigen Dateinamen prüfen etc
     ofstream fout( dateiName.c_str() ) ;
 
 
@@ -87,55 +84,89 @@ bool Graph::writeToFile(const string &dateiName)
     //Kanten
     for(int i = 0; i < _numNodes;i++)
     {
-        // print all neighboring vertices of vertex i
+        // Schreibe die Nachbarkanten von Knoten i
         for (int v : adjList[i])
             fout << v << " ";
         fout << endl;
     }
     fout.close();
 
-    return true;
 }
 
-bool Graph::addNode(double x, double y)
+//Überschreibt den aktuellen Graphen mit dem der in der übergebenen Datei gespeichert ist.
+//Es wird davon ausgegangen, dass der aktuelle Graph überschrieben werden darf
+void Graph::readFromFile(const string &dateiName)
+{ifstream fin( dateiName.c_str() ) ;
+
+    if ( ! fin )
+        throw "Graph::Graph(): Datei kann nicht geoeffnet werden!" ;
+
+    /***  lese Graphparameter aus  ***/
+
+    size_t nKnoten, nKanten ;
+    string dummy ;				// zum Lesen und Ignorieren
+
+    fin >> nKnoten ;
+    getline( fin, dummy ) ;		// ignoriere Rest der Zeile
+    fin >> nKanten ;
+    getline( fin, dummy ) ;		// ignoriere Rest der Zeile
+
+    _coordList.resize( nKnoten ) ;
+    adjList.resize( nKnoten ) ;
+
+    _numNodes=nKnoten;
+    _numEdges=nKanten;
+    /***  lese Knoten aus  ***/
+
+    for ( int i = 0 ;  i < nKnoten ;  ++i )
+    {
+        double x,y;
+        fin >> x ;
+        fin >> y ;
+        _coordList.at(i)=make_pair(x,y);
+        getline( fin, dummy ) ;		// ignoriere Rest der Zeile
+    }
+
+
+    /***  lese Kanten aus  ***/
+    for ( int i = 0 ;  i < nKanten ;  ++i )
+    {
+        string fuss, kopf;
+        fin >> fuss >> kopf ;
+
+        int src = stoi(fuss);
+        int dest= stoi(kopf);
+
+        //Füge Kante hinzu
+        addEdge(src,dest);
+    }  // for ( i )
+
+    fin.close() ;
+}
+
+void Graph::addNode(double x, double y)
 {
     _numNodes++;
     adjList.resize(_numNodes);
-    //_coordList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
     emit(graphChanged());
-    //printGraph();
-    return true;
 }
 
-bool Graph::removeNode(int index)
+void Graph::removeNode(int index)
 {
-    //qDebug()<<"remove node with index "<<index <<" and degree "<<getDegree(index)<<", insgesamt gibt es (vor dem Löschen) "<<_numNodes<<"Knoten";
-    if (index >= _numNodes)
-        return false;
-    //printGraph();
+    //Prüfe, ob Index gültig ist
+    if (!(index >= _numNodes) && index >= 0)
+    {
     //eingehende Kanten?
-   // qDebug() << "numNodes " << _numNodes<< " adjList.size() " << adjList.size();
     for (int i = 0; i < _numNodes;i++)
     {
-
-        //size_t y = adjList.size();
-        //qDebug() << i<<"te Zeile der Adjazenzliste durchsuchen, diese hat eine Länge von "<< getDegree(i);
         for(int j = int(getDegree(i))-1; j>= 0 ;j--)
          {
-            //qDebug()<< adjList.at(i).size();
-
-
-            //qDebug() << "i="<< i << "j=" << j<< "adjList.at(i).at(j)= "<<adjList.at(i).at(j) ;
              if (adjList.at(i).at(j) == index)
              {
-                 //qDebug()<<"An "<<j<<"ter Stelle Eintrag mit adjList.at(i).at(j)=index= "<<index<<"gefunden";
-                 int adj_i_size= adjList.at(i).size();
                  adjList.at(i).erase(adjList.at(i).begin()+j);
                  _numEdges--;
-                 //qDebug()<<"Löschen (hier) erfolgreich";
              }
-             //
 
 
            }
@@ -144,23 +175,23 @@ bool Graph::removeNode(int index)
         for(int j = int(getDegree(i))-1; j>= 0 ;j--)
             if(adjList.at(i).at(j)>index)
         {
-            qDebug()<<"es wird nachgerückt";
-            adjList.at(i).at(j)--;
+                adjList.at(i).at(j)--;
         }
       }
              if(!GERICHTET)
                  _numEdges -= adjList.at(index).size();
 
+             //Lösche ausgehende Kanten
              adjList.erase(adjList.begin()+index);
+             //Lösche Knoten in der Koordinatenliste
              _coordList.erase(_coordList.begin()+index);
              _numNodes--;
-             //printGraph();
 
-
+    //Graph hat sich geändert
     emit(graphChanged());
-
-
-             return true;
+    }
+    else
+        qDebug()<< "RemoveNode() hat ungültige index übergeben bekommen";
 }
 
 void Graph::rmvEdge(int src, int dest)
@@ -177,50 +208,66 @@ void Graph::rmvEdge(int src, int dest)
 }
 }
 
-bool Graph::addEdge(int src, int dest)
+void Graph::addEdge(int src, int dest)
 {
-    //prüfe ob KNoten vorhanden sind
-    if (max(src,dest) > _numNodes
-            || src == dest)
-        return false;
+    //prüfe ob Knoten vorhanden sind
+    if (!(max(src,dest) > _numNodes
+            || src == dest))
+    {
+    //Prüfe ob Kante bereits vorhanden ist
+    std::vector<int>::iterator it;
+    it = std::find(adjList[src].begin(),adjList[src].end(),dest);
 
-
+    if(it!=adjList[src].end() && *it == dest)
+        qDebug()<< "schon drin";
+    else
+    {
     adjList.at(src).push_back(dest);
     _numEdges++;
-    //qDebug()<< "src ="<<src<<" adjList(src).size()=" << adjList[src].size();
 
     if (!GERICHTET)
-        adjList.at(dest).push_back(src);
+    {
+        //Prüfe ob Kante bereits vorhanden ist
+        std::vector<int>::iterator it2;
+        it2 = std::find(adjList[dest].begin(),adjList[dest].end(),src);
+
+        if(it2!=adjList[dest].end() && *it2 == src)
+            qDebug()<< "schon drin(ungerichtet)";
+        else
+            adjList.at(dest).push_back(src);
+    }
+
     emit(graphChanged());
-    //printGraph();
-    return true;
+    }
+    }
+    else
+        qDebug()<< "addEdge hat ungültige Parameter bekommen";
 }
 
-bool Graph::moveNodeTo(int index, double X, double Y)
+void Graph::moveNodeTo(int index, double X, double Y)
 {
-    if (index >= _numNodes)
-        return false;
+    if (!index >= _numNodes)
+    {
     _coordList[index].first =X;
     _coordList[index].second=Y;
     emit(graphChanged());
-
-    return true;
+    }
+    else
+        qDebug()<< "moveNodeTo hat ungültige Parameter bekommen";
 }
 
 
 int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
 {
-   // qDebug() << "clickedOnNode" << _x << " " << _y << endl;
     for(int index= 0;index< _numNodes;index++)
     {
         double x = _coordList.at(index).first;
         double y = _coordList.at(index).second;
-        //qDebug() << x << " " << y << endl;
+
         //liegt übergebener Punkt im Kreis?
         if( pow((_x-x),2) + pow((_y-y),2) < pow(nodeRadius,2) )
         {
          //                                                                                                                                             qDebug() << "gefunden";
-            qDebug()<< "clicked on node liefert index "<< index;
             return index;
         }
     }
@@ -248,7 +295,6 @@ void Graph::printEulerUtil(int u)
 {
         qDebug() << "in printeEulerUtil()";
     // Gehe alle Nachbarn durch
-      //list<int>::iterator i;
       for (auto i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
       {
           int v = *i;
