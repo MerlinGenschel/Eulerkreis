@@ -77,18 +77,18 @@ void MainWindow::on_actionBedienungsanleitung_triggered()
 
 void MainWindow::on_action_ffnen_triggered()
 {
- /*   QString nameAkt = QFileDialog::getOpenFileName(this,"Datei öffnen","/Home");
+    nameAkt = QFileDialog::getOpenFileName(this,"Datei öffnen","/Home");
     if(!nameAkt.isEmpty())
-        model->readFromFile(nameAkt.fromUtf8().constData());
-*/
-    QString nameAkt = QFileDialog::getOpenFileName(this, tr("Datei laden"),"*.txt");
+        model->readFromFile(nameAkt.toUtf8().constData());
+
+/*    QString nameAkt = QFileDialog::getOpenFileName(this, tr("Datei laden"),"*.txt");
     if(!nameAkt.isEmpty())
     {
         QFile file;
         file.open(QIODevice::ReadOnly);
         QDataStream instream(&file);
         file.close();
-     }
+     }*/
 }
 
 void MainWindow::on_actionKnoten_zeichnen_triggered()
@@ -104,7 +104,7 @@ void MainWindow::on_actionVerbinden_triggered()
 
 void MainWindow::on_actionSpeichern_unter_triggered()
 {
-    QString nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+    nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
     if(!nameAkt.isEmpty())
      {
         qDebug() << nameAkt;
@@ -117,10 +117,9 @@ void MainWindow::on_actionSpeichern_unter_triggered()
 
 void MainWindow::on_actionSpeichern_triggered()
 {
-    QString nameAkt;
     if (nameAkt.isEmpty())
     {
-        QString nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+        nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
         model->writeToFile(nameAkt.toUtf8().constData());
     }
     else
@@ -135,3 +134,9 @@ void MainWindow::on_actionEulerkreis_triggered()
 }
 
 
+
+void MainWindow::on_actionNeu_triggered()
+{
+
+      //  model->clear();
+}

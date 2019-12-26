@@ -38,9 +38,12 @@ private slots:
 
     void on_actionEulerkreis_triggered();
 
+    void on_actionNeu_triggered();
+
 private:
     Ui::MainWindow *ui;
     QAction *undo;
     QAction *redo;
+    QString nameAkt;
 };
 #endif // MAINWINDOW_H

@@ -14,9 +14,8 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset theme=":/file/img/owl.jpg">
-    <normaloff>.</normaloff>
-    <normalon>:/file/img/stop.jpg</normalon>.</iconset>
+   <iconset>
+    <normaloff>img/owl.jpg</normaloff>img/owl.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -144,7 +143,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset>
+    <iconset resource="Logo.qrc">
      <normaloff>:/file/img/owl.jpg</normaloff>
      <activeoff>:/file/img/stop.jpg</activeoff>:/file/img/owl.jpg</iconset>
    </property>
@@ -161,7 +160,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Logo.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionBeenden</sender>

@@ -173,6 +173,9 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 // gebe die Anjazenzliste des Graphen aus
     void printGraph();
 
+// leere Modell
+    void clear();
+
 
 signals:
     void graphChanged(); // Dieses Signal wird immer dann gesendet (durch einen Funktionsaufruf in der Klasse), wenn sich die Daten geändert haben

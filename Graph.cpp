@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include <QDebug>
+#include <vector>
 
 Graph::Graph(const string &dateiName, bool gerichtet)
     :GERICHTET(gerichtet)
@@ -387,4 +388,11 @@ void Graph::printGraph()
 
     }
     qDebug()<<"___________________ ";
+}
+
+void Graph::clear()
+{
+    size_t i;
+    getEdges(i).clear();
+
 }
