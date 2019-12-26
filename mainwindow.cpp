@@ -25,8 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
     // ui->actionBeenden();
     model                      = new Graph(this);
     paint *view          = new paint(*model);
-    /*control *controller =*/ new control(*model,*view, undoStack, this);
-
+    /*control *controller = new control(*model,*view, undoStack, this);*/
+    controller = new control(*model,*view, undoStack, this);
     //control::modus = 1;
     setCentralWidget(view);
 
@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     redo = undoStack->createRedoAction(this);
     ui->toolBar->addAction(undo);
     ui->toolBar->addAction(redo);
+
 }
 
 MainWindow::~MainWindow()
@@ -137,6 +138,6 @@ void MainWindow::on_actionEulerkreis_triggered()
 
 void MainWindow::on_actionNeu_triggered()
 {
-
-      //  model->clear();
+       if (!model->getSize()==0)
+       model->clear();
 }

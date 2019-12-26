@@ -6,7 +6,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
+class control;
 class Graph;
 class MainWindow : public QMainWindow
 {
@@ -42,6 +42,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    control *controller =nullptr;
     QAction *undo;
     QAction *redo;
     QString nameAkt;

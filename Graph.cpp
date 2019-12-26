@@ -392,7 +392,10 @@ void Graph::printGraph()
 
 void Graph::clear()
 {
-    size_t i;
-    getEdges(i).clear();
+    adjList.clear();
+    _coordList.clear();
+    _numNodes = 0;
+    _numEdges = 0;
+    emit(graphChanged());
 
 }
