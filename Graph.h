@@ -84,7 +84,11 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //Liefert den Grad des Knotens mit index i
     int getDegree(int i);
 
-
+    //gibt für debugginzwecke die nummer der edges aus
+    int getNumEdges()
+    {
+        return _numEdges;
+    }
     //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
     vector<int> getEdges(int i) const
     {
@@ -163,7 +167,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
       void printEulerUtil(int u);
 
       // Zähle die von v erreichbaren Knoten mit Tiefensuche
-      int Tiefensuche(int v, vector<bool> besucht);
+      int Tiefensuche(int v, vector<bool>& besucht);
 
       // Finde heraus ob src-dest eine gültige nächste Kante ist
       bool gueltigeNaechsteKante(int src, int dest);
@@ -176,6 +180,9 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 // leere Modell
     void clear();
 
+
+    // gebe die Anjazenzliste des Graphen im Algo aus
+        void printGraphAlgo();
 
 signals:
     void graphChanged(); // Dieses Signal wird immer dann gesendet (durch einen Funktionsaufruf in der Klasse), wenn sich die Daten geändert haben

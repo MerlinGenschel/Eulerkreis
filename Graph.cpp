@@ -98,7 +98,7 @@ void Graph::writeToFile(const string &dateiName)
 //Es wird davon ausgegangen, dass der aktuelle Graph überschrieben werden darf
 void Graph::readFromFile(const string &dateiName)
 {ifstream fin( dateiName.c_str() ) ;
-
+    qDebug()<< "readFromFole()";
     if ( ! fin )
         throw "Graph::Graph(): Datei kann nicht geoeffnet werden!" ;
 
@@ -112,11 +112,12 @@ void Graph::readFromFile(const string &dateiName)
     fin >> nKanten ;
     getline( fin, dummy ) ;		// ignoriere Rest der Zeile
 
+    _coordList.clear();
     _coordList.resize( nKnoten ) ;
     adjList.resize( nKnoten ) ;
 
     _numNodes=nKnoten;
-    _numEdges=nKanten;
+    _numEdges=0;
     /***  lese Knoten aus  ***/
 
     for ( int i = 0 ;  i < nKnoten ;  ++i )
@@ -141,6 +142,7 @@ void Graph::readFromFile(const string &dateiName)
         //Füge Kante hinzu
         addEdge(src,dest);
     }  // for ( i )
+
 
     fin.close() ;
 }
@@ -178,9 +180,9 @@ void Graph::removeNode(int index)
         {
                 adjList.at(i).at(j)--;
         }
-      }
-             if(!GERICHTET)
-                 _numEdges -= adjList.at(index).size();
+        }
+             //if(!GERICHTET)
+             //    _numEdges -= adjList.at(index).size();
 
              //Lösche ausgehende Kanten
              adjList.erase(adjList.begin()+index);
@@ -287,6 +289,7 @@ void Graph::printEulerWeg()
          if (adjList_Algo[i].size() & 1)
            {   u = i; break;  }
 
+     qDebug()<<"suche Eulerweg ausgehend von Knoten "<< u;
      // EUlerweg ausgehend von u
      printEulerUtil(u);
      cout << endl;
@@ -294,23 +297,23 @@ void Graph::printEulerWeg()
 
 void Graph::printEulerUtil(int u)
 {
-        qDebug() << "in printeEulerUtil()";
-    // Gehe alle Nachbarn durch
-      for (auto i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
-      {
-          int v = *i;
+        qDebug() << "in printeEulerUtil() mit u = "<<u;
+        // Gehe alle Nachbarn durch
+        for (auto i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
+        {
+            int v = *i;
 
-          // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
-          if (v != -1 && gueltigeNaechsteKante(u, v))
-          {
+            // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
+            if (v != -1 && gueltigeNaechsteKante(u, v))
+            {
               cout << u << "-" << v << "  ";
               rmvEdge(u, v);
               printEulerUtil(v);
-          }
+            }
       }
 }
 
-int Graph::Tiefensuche(int v, vector<bool> besucht)
+int Graph::Tiefensuche(int v, vector<bool>& besucht)
 {
 
     // Markiere v als besucht
@@ -331,7 +334,7 @@ int Graph::Tiefensuche(int v, vector<bool> besucht)
 
 bool Graph::gueltigeNaechsteKante(int src, int dest)
 {
-        qDebug() << "in gueltigeNaechsteKante()";
+        qDebug() << "in gueltigeNaechsteKante() mit src= "<<src;;
     // Kante src-dest ist gültig wenn:
 
     // 1) dest ist einziger Nachbar von src
@@ -355,16 +358,21 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
     visited.resize(_numNodes);
     std::fill(visited.begin(), visited.end(),false);
     int count1 = Tiefensuche(src, visited);
-
+    //qDebug()<<"count1 "<<count1;
     // 2.b) Entferne (src-dest) und zähle nun nochmal die von src erreichbaren Knoten
     rmvEdge(src, dest);
+    //printGraphAlgo();
+
     std::fill(visited.begin(), visited.end(),false);
     int count2 = Tiefensuche(src, visited);
+    //qDebug()<<"count2 "<<count2;
+
 
     // 2.c) füge die Kante wieder hinzu
     addEdge_Algo(src, dest);
+    //printGraphAlgo();
 
-        qDebug()<< "nextEdge return:  bool(count1 <= count2)  count1 =" << count1 << " count2= "<< count2;
+    //    qDebug()<< "nextEdge return:  bool(count1 <= count2)  count1 =" << count1 << " count2= "<< count2;
     // 2.d) If count1 is greater, then edge (u, v) is a bridge
     return (count1 > count2)? false: true;
 }
@@ -392,10 +400,33 @@ void Graph::printGraph()
 
 void Graph::clear()
 {
-    adjList.clear();
     _coordList.clear();
-    _numNodes = 0;
-    _numEdges = 0;
-    emit(graphChanged());
+    for(int i = 0;i< _numNodes;i++)
+        adjList[i].clear();
+    adjList.clear();
+    _numEdges=0;
+    _numNodes=0;
+}
+
+
+void Graph::printGraphAlgo()
+{
+    int N = getSize();
+    for (int i = 0; i < N; i++)
+    {
+        // print current vertex number
+       qDebug() << i<< " --> "<<  "x= " <<  getCoord(i).first <<"y= " << getCoord(i).second<< "degree= "<<getDegree(i);
+
+        // print all neighboring vertices of vertex i
+        for (int v : adjList_Algo[i])
+            qDebug() << v << " ";
+
+
+        //print coordinates
+
+       //qDebug() <<  "x= " <<  getCoord(i).first <<"y= " << getCoord(i).second;
+
+    }
+    qDebug()<<"___________________ ";
 
 }
