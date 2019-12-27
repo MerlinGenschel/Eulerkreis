@@ -42,8 +42,12 @@ for(int j = 0; j< edgesI.size();j++)
     qDebug()<<edgesI[j];
 }
 test.append("\n");
-}
 
+}
+test.append("Nodes: ");
+test.append(std::to_string(Graphmodel.getSize()));
+test.append("  Edges: ");
+test.append(std::to_string(Graphmodel.getNumEdges()));
 
 model = new QStringListModel(this);
 QStringList knotenListe;

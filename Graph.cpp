@@ -1,6 +1,8 @@
 #include "Graph.h"
 #include <QDebug>
 #include <vector>
+#include <sstream>
+#include <string>
 
 Graph::Graph(const string &dateiName, bool gerichtet)
     :GERICHTET(gerichtet)
@@ -108,8 +110,10 @@ void Graph::readFromFile(const string &dateiName)
     string dummy ;				// zum Lesen und Ignorieren
 
     fin >> nKnoten ;
+    qDebug()<<"nKnoten= "<<nKnoten;
     getline( fin, dummy ) ;		// ignoriere Rest der Zeile
     fin >> nKanten ;
+    qDebug()<<"nKanten= "<<nKanten;
     getline( fin, dummy ) ;		// ignoriere Rest der Zeile
 
     _coordList.clear();
@@ -129,33 +133,40 @@ void Graph::readFromFile(const string &dateiName)
         getline( fin, dummy ) ;		// ignoriere Rest der Zeile
     }
 
+    std::string line;
 
     /***  lese Kanten aus  ***/
-    for ( int i = 0 ;  i < nKanten ;  ++i )
+    for ( int i = 0 ;  i < nKnoten ;  ++i )
     {
-        string fuss, kopf;
-        fin >> fuss >> kopf ;
-
-        int src = stoi(fuss);
-        int dest= stoi(kopf);
+        std::getline(fin,line);
+       std::istringstream iss(line);
+        string desti;
+        while(iss >> desti)
+        {
 
         //Füge Kante hinzu
-        addEdge(src,dest);
-    }  // for ( i )
+        addEdge(i,stoi(desti));
+        qDebug()<<"addEdge("<<i<<","<<stoi(desti)<<")";
+
+        }
+    } // for ( i )
 
 
     fin.close() ;
 }
 
-void Graph::addNode(double x, double y)
+
+
+int Graph::addNode(double x, double y)
 {
     _numNodes++;
     adjList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
     emit(graphChanged());
+    return _numNodes;
 }
 
-void Graph::removeNode(int index)
+int Graph::removeNode(int index)
 {
     //Prüfe, ob Index gültig ist
     if (!(index >= _numNodes) && index >= 0)
@@ -185,6 +196,7 @@ void Graph::removeNode(int index)
              //    _numEdges -= adjList.at(index).size();
 
              //Lösche ausgehende Kanten
+             _numEdges-= adjList[index].size();
              adjList.erase(adjList.begin()+index);
              //Lösche Knoten in der Koordinatenliste
              _coordList.erase(_coordList.begin()+index);
@@ -192,6 +204,7 @@ void Graph::removeNode(int index)
 
     //Graph hat sich geändert
     emit(graphChanged());
+             return index;
     }
     else
         qDebug()<< "RemoveNode() hat ungültige index übergeben bekommen";
@@ -237,7 +250,9 @@ void Graph::addEdge(int src, int dest)
         if(it2!=adjList[dest].end() && *it2 == src)
             qDebug()<< "schon drin(ungerichtet)";
         else
-            adjList.at(dest).push_back(src);
+        {    adjList.at(dest).push_back(src);
+            _numEdges++;
+        }
     }
 
     emit(graphChanged());

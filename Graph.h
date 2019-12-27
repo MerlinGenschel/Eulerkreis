@@ -106,10 +106,10 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     void readFromFile(string const& dateiName);
 
     //füge neuen KNoten mit (x,y) Koordinaten hinzu
-    void addNode(double x, double y);
+    int addNode(double x, double y);
 
     //entferne den Knoten mit der Nummer index
-    void removeNode(int index);
+    int removeNode(int index);
 
     //Entfernt eine Kante - wird nur im Algo benutzt
     void rmvEdge(int src, int dest);
