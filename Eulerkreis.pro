@@ -23,7 +23,11 @@ SOURCES += \
     mainwindow.cpp \
     control.cpp \
     paint.cpp \
-    commands/moveCommand.cpp
+    commands/moveCommand.cpp \
+    commands/connectCommand.cpp \
+    commands/removeNodeCommand.cpp \
+    commands/addNodeCommand.cpp \
+    memento.cpp
 
 HEADERS += \
     Graph.h \
@@ -32,7 +36,11 @@ HEADERS += \
     mainwindow.h \
     control.h \
     paint.h \
-    commands/moveCommand.h
+    commands/moveCommand.h \
+    commands/removeNodeCommand.h \
+    commands/connectCommand.h \
+    commands/addNodeCommand.h \
+    memento.h
 
 FORMS += \
     dialoghelp.ui \

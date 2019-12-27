@@ -23,7 +23,7 @@ void moveCommand::redo()
     if(model)
         model->moveNodeTo(nodeId, posNew.x(), posNew.y());
 }
-
+/*
 int moveCommand::id() const
 {
     return 1;
@@ -41,3 +41,4 @@ bool moveCommand::mergeWith(const QUndoCommand* other)
     posNew = command->posNew;
     return true;
 }
+*/
