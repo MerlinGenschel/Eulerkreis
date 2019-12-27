@@ -157,16 +157,15 @@ void Graph::readFromFile(const string &dateiName)
 
 
 
-int Graph::addNode(double x, double y)
+void Graph::addNode(double x, double y)
 {
     _numNodes++;
     adjList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
     emit(graphChanged());
-    return _numNodes;
-}
 
-int Graph::removeNode(int index)
+}
+void Graph::removeNode(int index)
 {
     //Prüfe, ob Index gültig ist
     if (!(index >= _numNodes) && index >= 0)
@@ -204,7 +203,7 @@ int Graph::removeNode(int index)
 
     //Graph hat sich geändert
     emit(graphChanged());
-             return index;
+
     }
     else
         qDebug()<< "RemoveNode() hat ungültige index übergeben bekommen";
@@ -294,50 +293,80 @@ int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
 
 void Graph::printEulerWeg()
 {
-    qDebug() << "in printeEulerWeg()";
     //Kopiere AdjazenzListe
     adjList_Algo=adjList;
 
+    //Mache speicher frei
+    eulerPath.clear();
+    /*
     // Finde Knoten mit ungeradem Grad
      size_t u = 0;
      for (size_t i = 0; i < _numNodes; i++)
          if (adjList_Algo[i].size() & 1)
            {   u = i; break;  }
-
-     qDebug()<<"suche Eulerweg ausgehend von Knoten "<< u;
+    */
      // EUlerweg ausgehend von u
-     printEulerUtil(u);
-     cout << endl;
+     if(adjList_Algo.size() != 0)
+         printEulerUtil(0);
+     qDebug()<<"end of weg";
 }
 
 void Graph::printEulerUtil(int u)
 {
+
         qDebug() << "in printeEulerUtil() mit u = "<<u;
         // Gehe alle Nachbarn durch
-        for (auto i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
+
+
+
+
+        vector<int>::iterator i;
+
+        //qDebug()<<"adj[u].size()="<<adjList_Algo[u].size();
+        for (i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); ++i)
         {
+            //qDebug()<< "in utilschleife mit u = "<<u<<"und i ="<<*i;
             int v = *i;
 
             // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
             if (v != -1 && gueltigeNaechsteKante(u, v))
             {
-              cout << u << "-" << v << "  ";
+              //cout << u << "-" << v << "  ";
+              Edge edge;
+              edge.src=u;
+              edge.dest=v;
+              eulerPath.push_back(edge);
               rmvEdge(u, v);
+              //qDebug()<<"rufe util auf mit v = "<<v;
+              if(u==0 && rekursion)
+              {
+                  qDebug()<<"rekursion";
+              }
+              else{
+              rekursion=true;
               printEulerUtil(v);
+              }
             }
-      }
+
+
+        }
+                qDebug()<< "util("<<u<<") ende";
+        //cout << endl;
+        //printGraphAlgo();
+
 }
 
 int Graph::Tiefensuche(int v, vector<bool>& besucht)
 {
+    //qDebug()<<"Tiefensuche anfang";
 
     // Markiere v als besucht
       besucht[v] = true;
       int count = 1;
 
       // Für alle nachbarn von v
-
-      for (vector<int>::iterator i = adjList_Algo[v].begin(); i != adjList_Algo[v].end(); ++i)
+        vector<int>::iterator i;
+      for (i = adjList_Algo[v].begin(); i != adjList_Algo[v].end(); ++i)
         {
           //        qDebug() << "in Tiefensuche() forschleife i = "<< *i<< " besucht[*i]= "<< besucht[*i];
           if (*i != -1 && !besucht[*i])
@@ -349,18 +378,18 @@ int Graph::Tiefensuche(int v, vector<bool>& besucht)
 
 bool Graph::gueltigeNaechsteKante(int src, int dest)
 {
-        qDebug() << "in gueltigeNaechsteKante() mit src= "<<src;;
+    //qDebug() << "in gueltigeNaechsteKante() mit src= "<<src;;
     // Kante src-dest ist gültig wenn:
 
     // 1) dest ist einziger Nachbar von src
     int count = 0;  // Bestimmt grad von src
-    //list<int>::iterator i;
-    for (auto i = adjList_Algo[src].begin(); i != adjList_Algo[src].end(); ++i)
+    vector<int>::iterator i;
+    for (i = adjList_Algo[src].begin(); i != adjList_Algo[src].end(); ++i)
        if (*i != -1)
           count++;          //Zähle nur kanten (!=-1)
     if (count == 1)
     {
-        qDebug()<< "nextEdge return: true";
+    //    qDebug()<< "nextEdge return: true";
         return true;
     }
 
@@ -387,7 +416,7 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
     addEdge_Algo(src, dest);
     //printGraphAlgo();
 
-    //    qDebug()<< "nextEdge return:  bool(count1 <= count2)  count1 =" << count1 << " count2= "<< count2;
+    //qDebug()<< "nextEdge return:  bool(count1 <= count2)  count1 =" << count1 << " count2= "<< count2;
     // 2.d) If count1 is greater, then edge (u, v) is a bridge
     return (count1 > count2)? false: true;
 }

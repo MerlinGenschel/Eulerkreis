@@ -131,7 +131,7 @@ void MainWindow::on_actionSpeichern_triggered()
 
 void MainWindow::on_actionEulerkreis_triggered()
 {
-    //bei klick: check, ob Eulerkreis
+    model->printEulerWeg();
 }
 
 

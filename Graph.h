@@ -18,6 +18,11 @@ struct Edge {
     int src, dest;
 };
 
+
+
+
+
+
 // Klasse die einen Graphen representiert
 class Graph:public QObject
 {
@@ -25,7 +30,7 @@ class Graph:public QObject
 
     bool GERICHTET = false;
 
-
+    bool rekursion=false;
     //Kontruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
     vector<pair<double,double>> _coordList;
 
@@ -34,6 +39,9 @@ class Graph:public QObject
 
     //Anzahl der Kanten im Graph - evtl unnötig;
     int _numEdges=0;
+
+    //vector of edges for the eulercircle
+    vector<Edge> eulerPath;
 
     // Vector von vectoren von ints - die Adjazenzliste
     vector<vector<int>> adjList;
@@ -106,10 +114,10 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     void readFromFile(string const& dateiName);
 
     //füge neuen KNoten mit (x,y) Koordinaten hinzu
-    int addNode(double x, double y);
+    void addNode(double x, double y);
 
     //entferne den Knoten mit der Nummer index
-    int removeNode(int index);
+    void removeNode(int index);
 
     //Entfernt eine Kante - wird nur im Algo benutzt
     void rmvEdge(int src, int dest);
