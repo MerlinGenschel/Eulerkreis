@@ -31,6 +31,11 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
         // relevante Ereignistypen behandeln:
         // cast auf speziellen Typ durchführen und die speziellen Event-Methoden aufrufen
         case QEvent::MouseButtonPress:
+            if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
+            {
+            connect(dynamic_cast<QMouseEvent*>(event));
+            break;
+            }
             if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
             {
                 add(dynamic_cast<QMouseEvent*>(event));
@@ -39,11 +44,6 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
             else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton)
             {
                 remove(dynamic_cast<QMouseEvent*>(event));
-                break;
-            }
-            else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
-            {
-                connect(dynamic_cast<QMouseEvent*>(event));
                 break;
             }
         case QEvent::MouseMove:
