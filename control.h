@@ -2,10 +2,6 @@
 #define CONTROL_H
 
 #include <QObject>
-#include <QPolygonF>
-#include <QPen>
-#include <iostream>
-
 
 class QMouseEvent;
 class QKeyEvent;
@@ -17,26 +13,28 @@ class Graph;    //Modell
 
 class control : public QObject
 {
-
     Q_OBJECT
 
-    paint& view;
+    // MVC: Die Steuerung kennt sowohl das Modell als auch die Ansicht
+    // Referenzen auf die beiden Objekte (keine Kopie oder eigene Objekte!)
     Graph& model;
-    QUndoStack *undoStack = nullptr;
+    paint& view;
 
+    QUndoStack *undoStack = nullptr;
 
     // Methoden um die Events zu handhaben, sie werden durch eventFilter und nicht automatisch aufgerufen
     // Da die Basisklase QObjekt und nicht QWidget ist, ist es auch keine Überschreibung aus der Basisklasse,
     // sie könnten auch einen anderen Namen haben
-    void mousePressEvent(QMouseEvent* event);
+    void add(QMouseEvent* event);
+    void remove(QMouseEvent* event);
+    void connect(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
     void keyPressEvent(QKeyEvent* event);
 
-    std::size_t activeNode = std::numeric_limits<std::size_t>::max(); // Index des angeklickten/ausgewählten Quadrats
+    // Die Steuerung ist dafür zuständig, welcher Knoten ausgewählt ist. Wird für die Interaktion benötigt
+    std::size_t activeNode = std::numeric_limits<std::size_t>::max(); // Index des angeklickten/ausgewählten Knotens
 
-
-
-
+    bool activeNodeValid(QMouseEvent* event) const;
 
     //Soll zwischen NUll und Eins wechseln um festzulegen an welcher Stelle im
     //zuVerbiden Array der aktuelle Index gespeichert werden soll

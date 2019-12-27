@@ -19,8 +19,8 @@ public:
 
     void undo() override;
     void redo() override;
-    int id() const override;
-    bool mergeWith(const QUndoCommand* other) override;
+    //int id() const override;
+    //bool mergeWith(const QUndoCommand* other) override;
 };
 
 #endif // MOVE_H
