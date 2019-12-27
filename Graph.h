@@ -31,6 +31,7 @@ class Graph:public QObject
     bool GERICHTET = false;
 
     bool rekursion=false;
+    int started;
     //Kontruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
     vector<pair<double,double>> _coordList;
 
@@ -120,7 +121,10 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     void removeNode(int index);
 
     //Entfernt eine Kante - wird nur im Algo benutzt
-    void rmvEdge(int src, int dest);
+    void rmvEdgeAlgo(int src, int dest);
+
+    //Entfernt eine Kante
+    void rmvEdge(int src,int dest);
 
     //füge Kante zwischen src und dest hinzu
     void addEdge(int src, int dest);

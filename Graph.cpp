@@ -1,4 +1,4 @@
-#include "Graph.h"
+﻿#include "Graph.h"
 #include <QDebug>
 #include <vector>
 #include <sstream>
@@ -209,7 +209,8 @@ void Graph::removeNode(int index)
         qDebug()<< "RemoveNode() hat ungültige index übergeben bekommen";
 }
 
-void Graph::rmvEdge(int src, int dest)
+
+void Graph::rmvEdgeAlgo(int src, int dest)
 {
     // Finde dest in Adjazenzliste von src und ersetze mit -1
      vector<int>::iterator idest = find(adjList_Algo[src].begin(), adjList_Algo[src].end(), dest);
@@ -217,10 +218,26 @@ void Graph::rmvEdge(int src, int dest)
 
      if(!GERICHTET)
      {
-     //  Finde src in Adjazenzliste von dest und ersetze mit -1
-     vector<int>::iterator isrc = find(adjList_Algo[dest].begin(), adjList_Algo[dest].end(), src);
-     *isrc = -1;
+        //  Finde src in Adjazenzliste von dest und ersetze mit -1
+        vector<int>::iterator isrc = find(adjList_Algo[dest].begin(), adjList_Algo[dest].end(), src);
+        *isrc = -1;
+     }
 }
+
+void Graph::rmvEdge(int src, int dest)
+{
+    // Finde dest in Adjazenzliste von src und lösche
+     vector<int>::iterator idest = find(adjList[src].begin(), adjList[src].end(), dest);
+     if (idest !=adjList[src].end())
+        adjList[src].erase(idest);
+
+     if(!GERICHTET)
+     {
+        //  Finde src in Adjazenzliste von dest und lösche
+        vector<int>::iterator isrc = find(adjList[dest].begin(), adjList[dest].end(), src);
+        if (isrc !=adjList[dest].end())
+            adjList[dest].erase(isrc);
+     }
 }
 
 void Graph::addEdge(int src, int dest)
@@ -234,7 +251,9 @@ void Graph::addEdge(int src, int dest)
     it = std::find(adjList[src].begin(),adjList[src].end(),dest);
 
     if(it!=adjList[src].end() && *it == dest)
-        qDebug()<< "schon drin";
+    {    qDebug()<< "schon drin, lösche kante" << src<<" "<<dest;
+        rmvEdge(src,dest);
+    }
     else
     {
     adjList.at(src).push_back(dest);
@@ -247,7 +266,10 @@ void Graph::addEdge(int src, int dest)
         it2 = std::find(adjList[dest].begin(),adjList[dest].end(),src);
 
         if(it2!=adjList[dest].end() && *it2 == src)
+         {
             qDebug()<< "schon drin(ungerichtet)";
+            rmvEdge(dest,src);
+        }
         else
         {    adjList.at(dest).push_back(src);
             _numEdges++;
@@ -298,16 +320,17 @@ void Graph::printEulerWeg()
 
     //Mache speicher frei
     eulerPath.clear();
-    /*
+
     // Finde Knoten mit ungeradem Grad
      size_t u = 0;
      for (size_t i = 0; i < _numNodes; i++)
          if (adjList_Algo[i].size() & 1)
            {   u = i; break;  }
-    */
+
+     started=u;
      // EUlerweg ausgehend von u
      if(adjList_Algo.size() != 0)
-         printEulerUtil(0);
+         printEulerUtil(u);
      qDebug()<<"end of weg";
 }
 
@@ -336,9 +359,9 @@ void Graph::printEulerUtil(int u)
               edge.src=u;
               edge.dest=v;
               eulerPath.push_back(edge);
-              rmvEdge(u, v);
+              rmvEdgeAlgo(u, v);
               //qDebug()<<"rufe util auf mit v = "<<v;
-              if(u==0 && rekursion)
+              if(u==started && rekursion)
               {
                   qDebug()<<"rekursion";
               }
@@ -404,7 +427,7 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
     int count1 = Tiefensuche(src, visited);
     //qDebug()<<"count1 "<<count1;
     // 2.b) Entferne (src-dest) und zähle nun nochmal die von src erreichbaren Knoten
-    rmvEdge(src, dest);
+    rmvEdgeAlgo(src, dest);
     //printGraphAlgo();
 
     std::fill(visited.begin(), visited.end(),false);
