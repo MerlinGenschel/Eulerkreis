@@ -158,7 +158,10 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     pair<double,double> getCoord(int i) const
     {
         if (i >= _numNodes || i<0)
-           qDebug() << "Fehler bei get Coord, denn i="<<i<<" >= _numNodes="<<_numNodes  ;
+        {
+            //qDebug() << "Fehler bei get Coord, denn i="<<i<<" >= _numNodes="<<_numNodes  ;
+
+        }
         //qDebug() << _numEdges << " " << i;
         else
             return _coordList[i];

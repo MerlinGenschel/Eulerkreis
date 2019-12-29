@@ -36,6 +36,8 @@ class control : public QObject
 
     bool activeNodeValid(QMouseEvent* event) const;
 
+    int _selectedNode;
+
     //Soll zwischen NUll und Eins wechseln um festzulegen an welcher Stelle im
     //zuVerbiden Array der aktuelle Index gespeichert werden soll
     size_t NullOderEins = 0;

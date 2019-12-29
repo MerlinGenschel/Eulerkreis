@@ -31,6 +31,12 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
         // relevante Ereignistypen behandeln:
         // cast auf speziellen Typ durchführen und die speziellen Event-Methoden aufrufen
         case QEvent::MouseButtonPress:
+            if(true)
+             {  const double width = view.width();
+                const double height  = view.height();
+                _selectedNode=model.clickedOnNode(dynamic_cast<QMouseEvent*>(event)->x()/width
+                                                  , dynamic_cast<QMouseEvent*>(event)->y()/height);
+            }
             if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
                 connect(dynamic_cast<QMouseEvent*>(event));
             else if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
@@ -99,15 +105,18 @@ void control::connect(QMouseEvent* event)
 // Knoten verschieben
 void control::move(QMouseEvent* event)
 {
+    const double width = view.width();
+    const double height  = view.height();
     if (activeNodeValid(event))
     {
-        int index = model.clickedOnNode(event->pos().x()
-                                         , event->pos().y());
+        //int index = model.clickedOnNode(event->pos().x()/width
+        //                                 , event->pos().y()/height);
+        //qDebug()<< "index ="<<index;
 
         QPointF newPos(event->x()/static_cast<double>(view.width())
                      , event->y()/static_cast<double>(view.height()));
 
-        undoStack->push(new moveCommand(&model, activeNode, index, newPos));
+        undoStack->push(new moveCommand(&model, _selectedNode, newPos));
     }
 }
 /*

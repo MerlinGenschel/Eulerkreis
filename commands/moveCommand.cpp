@@ -1,9 +1,8 @@
 #include "moveCommand.h"
 #include "Graph.h"
 
-moveCommand::moveCommand(Graph* model, int& k, int id, QPointF pos)
+moveCommand::moveCommand(Graph* model, int id, QPointF pos)
     : model(model)
-    , k(k)
     , nodeId(id)
     , posNew(pos)
 {
@@ -15,16 +14,19 @@ moveCommand::moveCommand(Graph* model, int& k, int id, QPointF pos)
 
 void moveCommand::undo()
 {
+    //qDebug()<< "Will Knoten " << nodeId << " verschieben";
+
     if(model)
         model->moveNodeTo(nodeId, posOld.x(), posOld.y());
-    k = nodeId;
+    //k = nodeId;
 }
 
 void moveCommand::redo()
 {
+    //qDebug()<< "Will Knoten " << nodeId << " verschieben";
     if(model)
         model->moveNodeTo(nodeId, posNew.x(), posNew.y());
-    k = nodeId;
+    //k = nodeId;
 }
 
 int moveCommand::id() const

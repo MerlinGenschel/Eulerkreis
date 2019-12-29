@@ -329,14 +329,15 @@ void Graph::addEdgeReadFromFile(int src, int dest)
 
 void Graph::moveNodeTo(int index, double X, double Y)
 {
-    if (!index >= _numNodes)
+    //qDebug()<<"MoveNodeTo index "<<index<<"x= "<<X<<" Y= "<<Y;
+    if (!(index >= _numNodes))
     {
     _coordList[index].first =X;
     _coordList[index].second=Y;
     emit(graphChanged());
     }
-    else
-        qDebug()<< "moveNodeTo hat ungültige Parameter bekommen";
+    //else
+    //    qDebug()<< "moveNodeTo hat ungültige Parameter bekommen";
 }
 
 int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
