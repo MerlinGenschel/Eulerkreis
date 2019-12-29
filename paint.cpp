@@ -35,6 +35,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
     for(int i=0; i< model.getSize();i++) // statt des direkten Zugriffs erfolgt hier jetzt eine Nachfrage beim Modell, dieses liefert die aktuelle Quadrateliste
     {
         p.setBrush(QBrush(Qt::black));
+
         p.drawEllipse(static_cast<int>(model.getCoord(i).first * breite-10)
                  , static_cast<int> (model.getCoord(i).second * hoehe-10)
                  , 20

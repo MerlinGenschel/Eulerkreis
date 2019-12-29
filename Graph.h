@@ -126,8 +126,13 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //Entfernt eine Kante
     void rmvEdge(int src,int dest);
 
-    //füge Kante zwischen src und dest hinzu
+
+    //füge Kante zwischen src und dest hinzu, löscht Kante, falls sie Bereits existiert
     void addEdge(int src, int dest);
+
+    //wue addEdge(), bloß ohne das Löschen
+    //Wird nur in der Funktion "ReadFromFile" benutzt
+    void addEdgeReadFromFile(int src, int dest);
 
     //füge Kante zwischen src und dest hinzu, operiert auf der Kopie der Adjazenzliste und wird nur im Algo benutzt
     void addEdge_Algo(int src, int dest)
