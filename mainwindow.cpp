@@ -132,7 +132,21 @@ void MainWindow::on_actionSpeichern_triggered()
 void MainWindow::on_actionEulerkreis_triggered()
 {
     if(model->printEulerWeg())
-        qDebug()<<"RFOLG";
+    {
+        vector<Edge>eulerPath = model->getPath();
+        if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
+            qDebug()<<"Kreis";
+        else
+            qDebug()<<"Eulerweg";
+        for(int i = 0;i<eulerPath.size();i++)
+            qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
+
+    }
+    else
+    {
+         qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
+    }
+
 }
 
 

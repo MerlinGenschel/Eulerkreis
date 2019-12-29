@@ -251,7 +251,8 @@ void Graph::addEdge(int src, int dest)
     it = std::find(adjList[src].begin(),adjList[src].end(),dest);
 
     if(it!=adjList[src].end() && *it == dest)
-    {    qDebug()<< "schon drin, lösche kante" << src<<" "<<dest;
+    {
+        //qDebug()<< "schon drin, lösche kante" << src<<" "<<dest;
         rmvEdge(src,dest);
     }
     else
@@ -267,7 +268,7 @@ void Graph::addEdge(int src, int dest)
 
         if(it2!=adjList[dest].end() && *it2 == src)
          {
-            qDebug()<< "schon drin(ungerichtet)";
+            //qDebug()<< "schon drin(ungerichtet)";
             rmvEdge(dest,src);
         }
         else
@@ -371,7 +372,7 @@ bool Graph::printEulerWeg()
     //Kopiere AdjazenzListe
 
     adjList_Algo=adjList;
-    printGraph();
+    //printGraph();
 
     //Mache speicher frei
     eulerPath.clear();
@@ -412,7 +413,7 @@ bool Graph::printEulerWeg()
 void Graph::printEulerUtil(int u)
 {
 
-    qDebug() << "in printeEulerUtil() mit u = "<<u;
+    //qDebug() << "in printeEulerUtil() mit u = "<<u;
     _besucht[u]=true;
     // Gehe alle Nachbarn durch
     for (vector<int>::iterator i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); i++)
@@ -432,7 +433,7 @@ void Graph::printEulerUtil(int u)
             printEulerUtil(v);
         }
     }
-    qDebug()<< "util("<<u<<") ende";
+    //qDebug()<< "util("<<u<<") ende";
 
 
 
