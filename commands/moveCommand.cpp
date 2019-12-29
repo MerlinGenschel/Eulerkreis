@@ -1,8 +1,9 @@
 #include "moveCommand.h"
 #include "Graph.h"
 
-moveCommand::moveCommand(Graph* model, std::size_t id, QPointF pos)
+moveCommand::moveCommand(Graph* model, int& k, int id, QPointF pos)
     : model(model)
+    , k(k)
     , nodeId(id)
     , posNew(pos)
 {
@@ -16,14 +17,16 @@ void moveCommand::undo()
 {
     if(model)
         model->moveNodeTo(nodeId, posOld.x(), posOld.y());
+    k = nodeId;
 }
 
 void moveCommand::redo()
 {
     if(model)
         model->moveNodeTo(nodeId, posNew.x(), posNew.y());
+    k = nodeId;
 }
-/*
+
 int moveCommand::id() const
 {
     return 1;
@@ -32,6 +35,7 @@ int moveCommand::id() const
 bool moveCommand::mergeWith(const QUndoCommand* other)
 {
     const moveCommand* command = dynamic_cast<const moveCommand*>(other);
+
     if(!command)
         return false;
 
@@ -39,6 +43,6 @@ bool moveCommand::mergeWith(const QUndoCommand* other)
         return false;
 
     posNew = command->posNew;
+
     return true;
 }
-*/

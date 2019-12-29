@@ -32,103 +32,72 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
         // cast auf speziellen Typ durchführen und die speziellen Event-Methoden aufrufen
         case QEvent::MouseButtonPress:
             if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
-            {
-            connect(dynamic_cast<QMouseEvent*>(event));
-            break;
-            }
-            if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
-            {
+                connect(dynamic_cast<QMouseEvent*>(event));
+            else if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
                 add(dynamic_cast<QMouseEvent*>(event));
-                break;
-            }
-            else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton)
-            {
+            else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
                 remove(dynamic_cast<QMouseEvent*>(event));
-                break;
-            }
+            break;
         case QEvent::MouseMove:
-            mouseMoveEvent(dynamic_cast<QMouseEvent*>(event));
+            if (dynamic_cast<QMouseEvent*>(event)->buttons() & Qt::RightButton/* && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)*/)
+                move(dynamic_cast<QMouseEvent*>(event));
             break;
-        case QEvent::KeyPress:
+        /*case QEvent::KeyPress:
             keyPressEvent(dynamic_cast<QKeyEvent*>(event));
-            break;
+            break;*/
         default:
             return false;
     }
     return event->isAccepted();
 }
 
-//
+// Knoten hinzufügen
 void control::add(QMouseEvent* event)
 {
     const double width = view.width();
     const double height  = view.height();
 
-    // Knoten Hinzufügen
-    //if(event->button() == Qt::RightButton) // Rechte Maustaste: Einen Knoten einfügen
-    //{
-        QPointF pos(event->x()/width
-                  , event->y()/height);
-        undoStack->push(new addNodeCommand(&model, pos));
-    //}
+    QPointF pos(event->x()/width
+              , event->y()/height);
+
+    undoStack->push(new addNodeCommand(&model, pos));
 }
 
+// Knoten löschen
 void control::remove(QMouseEvent* event)
 {
-//*
-    //else if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) && event->button() == Qt::LeftButton)  //Löschen Modus
-    //{
     const double width = view.width();
     const double height  = view.height();
 
-        int index = model.clickedOnNode(event->x()/width
+    int index = model.clickedOnNode(event->x()/width
                                       , event->y()/height);
-        if (activeNodeValid(event))
-        {
-            undoStack->push(new removeNodeCommand(&model, index));
-            //activeNode = model.getSize() -1;
-        }
-    //}
-//*/
+    if (activeNodeValid(event))
+        undoStack->push(new removeNodeCommand(&model, index));
 }
-//*
-//else if(event->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))  //VerbindenModus
+
+// Knoten verbinden
 void control::connect(QMouseEvent* event)
 {
     const double width = view.width();
     const double height  = view.height();
-        //qDebug() << "Verbinden";
-        if(activeNodeValid(event))
-        {
-            //an methode in Graph delegieren, dort auch signal aussenden
-            model.toConnect[NullOderEins] = model.clickedOnNode(event->x()/width
-                                                                , event->y()/height);
-            control::NullOderEins = (NullOderEins+1)%2;
-            emit(model.graphChanged());
-        }
-        //qDebug() << toConnect[0];
-        //qDebug() << toConnect[1];
-        if((model.toConnect[0]!=-1  && model.toConnect[1]!=-1))
-        {
-            model.addEdge(model.toConnect[0],model.toConnect[1]);
-            model.toConnect[0]=-1;
-            model.toConnect[1]=-1;
-        }
-}
-//*/
-/*
-    else
-    {
-        activeNode = model.clickedOnNode(event->pos().x()
-                                         , event->pos().y());
-    }
-//*/
 
+    if(activeNodeValid(event))
+    {
+        model.toConnect[NullOderEins] = model.clickedOnNode(event->x()/width
+                                                                , event->y()/height);
+        control::NullOderEins = (NullOderEins+1)%2;
+    }
+    if((model.toConnect[0] != -1  && model.toConnect[1] != -1))
+    {
+        undoStack->push(new connectCommand(&model, model.toConnect[0],model.toConnect[1]));
+        model.toConnect[0] = -1;
+        model.toConnect[1] = -1;
+    }
+}
 
 // Knoten verschieben
-void control::mouseMoveEvent(QMouseEvent* event)
+void control::move(QMouseEvent* event)
 {
-//*
     if (activeNodeValid(event))
     {
         int index = model.clickedOnNode(event->pos().x()
@@ -137,14 +106,13 @@ void control::mouseMoveEvent(QMouseEvent* event)
         QPointF newPos(event->x()/static_cast<double>(view.width())
                      , event->y()/static_cast<double>(view.height()));
 
-        undoStack->push(new moveCommand(&model, index, newPos));
+        undoStack->push(new moveCommand(&model, activeNode, index, newPos));
     }
-//*/
 }
-
+/*
 void control::keyPressEvent(QKeyEvent* event)
 {
-/*
+
     if(!activeNodeValid(event)) // kein aktives Quadrat, Tastendrücke müssen nicht beachtet werden (Achtung: hierbei werden Tastendrücke weitergeleitet die ansonsten abgefangen worden wären)
         return event->ignore(); // Weiterleitung der Tastendrücke an QWidget und damit an die übergeordneten Widgets
 
@@ -157,20 +125,23 @@ void control::keyPressEvent(QKeyEvent* event)
         default: // keine Taste die bearbeitet wird -> Aufruf der Methode vom Elternobjekt
             return event->ignore();
     }
-*/
+
 }
-
-
+*/
 // Prüfen um der aktueller Knoten-Index gültig ist
 bool control::activeNodeValid(QMouseEvent* event) const
 {
+    //return activeNode < model.getSize();
+
     const double width   = view.width();
     const double height  = view.height();
 
     int index = model.clickedOnNode(event->x()/width
                                     , event->y()/height);
+
     if (index != -1)
         return true;
+
 }
 
 
