@@ -355,8 +355,12 @@ int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
     return -1;
 }
 
-void Graph::printEulerWeg()
+bool Graph::printEulerWeg()
 {
+
+    _besucht.resize(_numNodes);
+    std::fill(_besucht.begin(), _besucht.end(),false);
+
     adjList_Algo.resize(_numNodes);
     //lösche adj_list_Algo;
     for (int i = 0; i< _numNodes;i++)
@@ -378,71 +382,57 @@ void Graph::printEulerWeg()
          if (adjList_Algo[i].size() & 1)
            {   u = i; break;  }
 
-     started=u;
+
+
      // EUlerweg ausgehend von u
      if(adjList_Algo.size() != 0)
          printEulerUtil(u);
+
+     //Alle Knoten besucht?
+     vector<bool>::iterator it = find(_besucht.begin(),_besucht.end(),false);
+     if (it != _besucht.end())
+         return false;
 
      int NumEdges =_numEdges;
      if(!GERICHTET)
          NumEdges/=2;
      if(eulerPath.size()< NumEdges)
-         qDebug()<<"weder EulerKreis, noch Eulerweg, denn eulerPath.size() = "<< eulerPath.size() <<" < NumEdges ="<<NumEdges;
-     else if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
-         qDebug()<<"Kreis";
+         return false;
      else
-         qDebug()<<"Eulerweg";
-     for(int i = 0;i<eulerPath.size();i++)
-         qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
+         return true;
+     //qDebug()<<"weder EulerKreis, noch Eulerweg, denn eulerPath.size() = "<< eulerPath.size() <<" < NumEdges ="<<NumEdges;
+     //else if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
+     //    qDebug()<<"Kreis";
+     //else
+     //    qDebug()<<"Eulerweg";
+     //for(int i = 0;i<eulerPath.size();i++)
+     //    qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
 }
 
 void Graph::printEulerUtil(int u)
 {
 
-        qDebug() << "in printeEulerUtil() mit u = "<<u;
-        // Gehe alle Nachbarn durch
-
-
-
-
-
-        //qDebug()<<"adj[u].size()="<<adjList_Algo[u].size();
-        for (vector<int>::iterator i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); i++)
+    qDebug() << "in printeEulerUtil() mit u = "<<u;
+    _besucht[u]=true;
+    // Gehe alle Nachbarn durch
+    for (vector<int>::iterator i = adjList_Algo[u].begin(); i != adjList_Algo[u].end(); i++)
+    {
+        //qDebug()<< "in utilschleife mit u = "<<u<<"und i ="<<*i;
+        int v = *i;
+        // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
+        if (v != -1 && gueltigeNaechsteKante(u, v))
         {
-            qDebug()<< "in utilschleife mit u = "<<u<<"und i ="<<*i;
-            int v = *i;
-
-            // Wenn v noch nicht entfernt wurde (-1) und eine gültige nächste Kante ist
-            if (v != -1 && gueltigeNaechsteKante(u, v))
-            {
-              //cout << u << "-" << v << "  ";
-              Edge edge;
-              edge.src=u;
-              edge.dest=v;
-              eulerPath.push_back(edge);
-              rmvEdgeAlgo(u, v);
-              //qDebug()<<"rufe util auf mit v = "<<v;
-
-              vector<int>::iterator ix;
-
-
-              int count =0;
-              for (ix = adjList_Algo[v].begin(); ix != adjList_Algo[v].end(); ++ix)
-                 if (*ix != -1)
-                    count++;          //Zähle nur kanten (!=-1)
-              if (count == 0)
-              {
-                  qDebug()<< "kein kanten";
-
-              }
-              else{
-              printEulerUtil(v);
-              }
-
-
-            }
-}
-        qDebug()<< "util("<<u<<") ende";
+            //cout << u << "-" << v << "  ";
+            Edge edge;
+            edge.src=u;
+            edge.dest=v;
+            eulerPath.push_back(edge);
+            rmvEdgeAlgo(u, v);
+            //qDebug()<<"rufe util auf mit v = "<<v;
+            printEulerUtil(v);
+        }
+    }
+    qDebug()<< "util("<<u<<") ende";
 
 
 
@@ -450,28 +440,22 @@ void Graph::printEulerUtil(int u)
 
 int Graph::Tiefensuche(int v, vector<bool>& besucht)
 {
-    //qDebug()<<"Tiefensuche anfang";
-
     // Markiere v als besucht
-      besucht[v] = true;
-      int count = 1;
+    besucht[v] = true;
+    int count = 1;
 
-      // Für alle nachbarn von v
-        vector<int>::iterator i;
-      for (i = adjList_Algo[v].begin(); i != adjList_Algo[v].end(); ++i)
-        {
-          //        qDebug() << "in Tiefensuche() forschleife i = "<< *i<< " besucht[*i]= "<< besucht[*i];
-          if (*i != -1 && !besucht[*i])
-              count += Tiefensuche(*i,besucht);
-        }
-      //qDebug()<<"Tiefensuche fertig";
-      return count;
+    // Für alle nachbarn von v
+    vector<int>::iterator i;
+    for (i = adjList_Algo[v].begin(); i != adjList_Algo[v].end(); ++i)
+    {
+        if (*i != -1 && !besucht[*i])
+          count += Tiefensuche(*i,besucht);
+    }
+    return count;
 }
 
 bool Graph::gueltigeNaechsteKante(int src, int dest)
 {
-    qDebug() << "in gueltigeNaechsteKante() mit src= "<<src << " dest= "<<dest;
-    //printGraphAlgo();
     // Kante src-dest ist gültig wenn:
 
     // 1) dest ist einziger Nachbar von src
@@ -481,10 +465,7 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
        if (*i != -1)
           count++;          //Zähle nur kanten (!=-1)
     if (count == 1)
-    {
-        qDebug()<< "nextEdge return: true";
         return true;
-    }
 
 
     // 2) Wenn es mehrere nachbarn gibt, ist src-dest keine Brücke
@@ -495,40 +476,32 @@ bool Graph::gueltigeNaechsteKante(int src, int dest)
     visited.resize(_numNodes);
     std::fill(visited.begin(), visited.end(),false);
     int count1 = Tiefensuche(src, visited);
-    //qDebug()<<"count1 "<<count1;
+
     // 2.b) Entferne (src-dest) und zähle nun nochmal die von src erreichbaren Knoten
-
-
     //rmvEdgeAlgo(src, dest);
     // Finde dest in Adjazenzliste von src und ersetze mit -1
-     vector<int>::iterator idest = find(adjList_Algo[src].begin(), adjList_Algo[src].end(), dest);
-     *idest = -1;
+    vector<int>::iterator idest = find(adjList_Algo[src].begin(), adjList_Algo[src].end(), dest);
+    *idest = -1;
 
-     vector<int>::iterator isrc;
-     if(!GERICHTET)
-     {
-        //  Finde src in Adjazenzliste von dest und ersetze mit -1
-        isrc = find(adjList_Algo[dest].begin(), adjList_Algo[dest].end(), src);
-        *isrc = -1;
-     }
-    //printGraphAlgo();
+    vector<int>::iterator isrc;
+    if(!GERICHTET)
+    {
+       //  Finde src in Adjazenzliste von dest und ersetze mit -1
+       isrc = find(adjList_Algo[dest].begin(), adjList_Algo[dest].end(), src);
+       *isrc = -1;
+    }
+
 
     std::fill(visited.begin(), visited.end(),false);
     int count2 = Tiefensuche(src, visited);
-    //qDebug()<<"count2 "<<count2;
 
 
     // 2.c) füge die Kante wieder hinzu
-    //addEdge_Algo(src, dest);
-
     *idest=dest;
     if(!GERICHTET)
         *isrc=src;
-    qDebug()<<"Ende von nextedge";
-    //printGraphAlgo();
 
-    qDebug()<< "nextEdge return:  "<<bool(count1==count2);
-    // 2.d) If count1 is greater, then edge (u, v) is a bridge
+    // 2.d) wenn count1 != count2, dann ist (src,dest) eine Brückenkante
     return (count1 == count2);
 }
 

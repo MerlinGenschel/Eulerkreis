@@ -93,6 +93,7 @@ void control::connect(QMouseEvent* event)
         model.toConnect[0] = -1;
         model.toConnect[1] = -1;
     }
+    emit(model.graphChanged());
 }
 
 // Knoten verschieben

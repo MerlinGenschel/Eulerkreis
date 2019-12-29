@@ -30,9 +30,7 @@ class Graph:public QObject
 
     bool GERICHTET = false;
 
-    bool rekursion=false;
-    int started;
-    //Kontruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
+    //Konstruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
     vector<pair<double,double>> _coordList;
 
     //Anzahl der Knoten in dem Graph;
@@ -50,6 +48,8 @@ class Graph:public QObject
     // Kopie der Adjazenzliste welche später im Algorithmus modifiziert wird
     vector<vector<int>> adjList_Algo;
 
+    //Vector von bools um im Algo festzustellen, ob alle Knoten besucht wurden (evtl mehr als eine ZHK)
+    vector<bool> _besucht;
 public:
 
 
@@ -180,7 +180,7 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
 
     // Methoden zur Ausgabe des Eulerwegs
-      void printEulerWeg();
+      bool printEulerWeg();
       void printEulerUtil(int u);
 
       // Zähle die von v erreichbaren Knoten mit Tiefensuche
@@ -190,7 +190,10 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
       bool gueltigeNaechsteKante(int src, int dest);
 
 
-
+      vector<Edge> const& getPath()
+      {
+          return eulerPath;
+      }
 // gebe die Anjazenzliste des Graphen aus
     void printGraph();
 

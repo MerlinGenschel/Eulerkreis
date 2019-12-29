@@ -131,7 +131,8 @@ void MainWindow::on_actionSpeichern_triggered()
 
 void MainWindow::on_actionEulerkreis_triggered()
 {
-    model->printEulerWeg();
+    if(model->printEulerWeg())
+        qDebug()<<"RFOLG";
 }
 
 
