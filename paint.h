@@ -4,7 +4,8 @@
 #include <QWidget>
 #include<vector>
 #include<limits>
-
+//Datenstruktur für die Kanten
+class  Edge;
 class Graph;
 
 class paint : public QWidget
@@ -17,7 +18,9 @@ public:
    paint(const Graph& model,QWidget* parent = nullptr);
 
 protected:
-   void paintEvent(QPaintEvent* event) override;
+   void paintEvent(QPaintEvent* event) ;
+
+   void animationEvent(QPaintEvent* event,int i);
 
 
 

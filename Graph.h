@@ -90,6 +90,12 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
     //Wenn es kein Eulerkreis ist, dann ist der erste Eintrag vom vector = -1 als Signalwert
     vector<int> pruefeEulerKreis() const;
 
+
+    //Liefert constante referenz auf den vector mit den Kanten für den EulerPfad.
+    std::vector<Edge>const & getPath()const
+    {
+        return eulerPath;
+    }
     //Liefert den Grad des Knotens mit index i
     int getDegree(int i);
 

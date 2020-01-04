@@ -16,6 +16,8 @@
 
 //class Graph;
 
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -136,6 +138,7 @@ void MainWindow::on_actionEulerkreis_triggered()
     {
 
     vector<Edge>eulerPath = model->getPath();
+    emit(model->graphChanged());
     animationWidget *ani = new animationWidget(eulerPath, this);
     addDockWidget(Qt::TopDockWidgetArea, ani);
     ani->eulerAnimation();

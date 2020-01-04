@@ -10,6 +10,8 @@
 #include<QMouseEvent>
 #include <vector>
 #include <QDebug>
+#include <QTime>
+#include <QThread>
 
 paint::paint(const Graph& model,QWidget *parent)
     : QWidget(parent),model(model)
@@ -27,7 +29,8 @@ void paint::paintEvent(QPaintEvent* /*event*/)
 {
     const double breite = width();
     const double hoehe  = height();
-
+    
+    
     QPainter p(this);
 
     //hier werden bisher NUR die Knoten gezeichnet
@@ -40,6 +43,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                  , static_cast<int> (model.getCoord(i).second * hoehe-10)
                  , 20
                  , 20);
+
     }
 
     //markierte Knoten in Rot
@@ -53,7 +57,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                  , 20);
 
     }
-
+    //Kanten
     for(size_t i=0; i < model.getSize();i++)
         {
             p.setPen(QPen(Qt::black) );
@@ -68,5 +72,40 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                         , static_cast<int>(model.getCoord(edges[k]).first * breite)
                         , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
             }
+
         }
+    /*
+
+    if(!model.getPath().empty())
+    {
+        p.setPen(QPen(Qt::green));
+        vector<Edge> path =model.getPath();
+        qDebug()<<"jka";
+        for(int i = 0;i<path.size();i++)
+        {
+            p.drawLine(static_cast<int>(model.getCoord(path[i].src).first * breite)
+                        , static_cast<int> (model.getCoord(path[i].src).second * hoehe)
+                        , static_cast<int>(model.getCoord(path[i].dest).first * breite)
+                        , static_cast<int> (model.getCoord(path[i].dest).second * hoehe));
+    qDebug()<<i;
+
+            QThread::msleep(500);       //"Schlafe" 500msec - sehr unelegant, nur vom prizip her
+        }
+        }
+        */
+}
+
+void paint::animationEvent(QPaintEvent *event,int i)
+{
+    const double breite = width();
+    const double hoehe  = height();
+
+    vector<Edge> path = model.getPath();
+    QPainter p(this);
+    p.setPen(QPen(Qt::green));
+    p.drawLine(static_cast<int>(model.getCoord(path[i].src).first * breite)
+                , static_cast<int> (model.getCoord(path[i].src).second * hoehe)
+                , static_cast<int>(model.getCoord(path[i].dest).first * breite)
+                , static_cast<int> (model.getCoord(path[i].dest).second * hoehe));
+
 }
