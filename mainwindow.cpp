@@ -132,10 +132,14 @@ void MainWindow::on_actionSpeichern_triggered()
 
 void MainWindow::on_actionEulerkreis_triggered()
 {
+    if (model->printEulerWeg())
+    {
 
-
-    animationWidget *ani = new animationWidget(this);
+    vector<Edge>eulerPath = model->getPath();
+    animationWidget *ani = new animationWidget(eulerPath, this);
     addDockWidget(Qt::TopDockWidgetArea, ani);
+    ani->eulerAnimation();
+
    /* if(model->printEulerWeg())
     {
         vector<Edge>eulerPath = model->getPath();
@@ -152,6 +156,7 @@ void MainWindow::on_actionEulerkreis_triggered()
          qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
     }*/
 
+}
 }
 
 
