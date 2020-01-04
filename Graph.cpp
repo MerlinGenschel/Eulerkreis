@@ -277,8 +277,8 @@ void Graph::addEdge(int src, int dest)
         }
     }
 
-    emit(graphChanged());
-    }
+    //emit(graphChanged());
+    }emit(graphChanged());
     }
     else
         qDebug()<< "addEdge hat ungültige Parameter bekommen";
