@@ -3,8 +3,8 @@
 
 #include <QSignalBlocker>
 
-animationWidget::animationWidget(/*Graph &Graphmodel, */QWidget *parent) :
-    QDockWidget(parent),/*Graphmodel(Graphmodel),*/
+animationWidget::animationWidget(vector<Edge>eulerPath, QWidget *parent) :
+    QDockWidget(parent),_eulerPath(eulerPath),
     ui(new Ui::AnimationWidget)
 {
     ui->setupUi(this);
@@ -13,6 +13,19 @@ animationWidget::animationWidget(/*Graph &Graphmodel, */QWidget *parent) :
 animationWidget::~animationWidget()
 {
     delete ui;
+}
+
+void animationWidget::eulerAnimation()
+{
+    qDebug()<< "bin in Euleranimation";
+    if(_eulerPath[0].src == _eulerPath[_eulerPath.size()-1].dest)
+            qDebug()<<"Kreis";
+        else
+            qDebug()<<"Eulerweg";
+        for(int i = 0;i<_eulerPath.size();i++)
+            qDebug() <<_eulerPath[i].src << " "<<_eulerPath[i].dest;
+  
+    
 }
 
 void animationWidget::setAnimationStatus(bool)

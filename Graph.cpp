@@ -167,6 +167,7 @@ void Graph::addNode(double x, double y)
 }
 void Graph::removeNode(int index)
 {
+    qDebug()<<"Remove "<<index;
     //Prüfe, ob Index gültig ist
     if (!(index >= _numNodes) && index >= 0)
     {

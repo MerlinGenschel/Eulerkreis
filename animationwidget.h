@@ -17,11 +17,13 @@ class animationWidget : public QDockWidget
 private:
     Ui::AnimationWidget *ui;
     QStringListModel* model;
-   // Graph &Graphmodel;
+    vector<Edge>_eulerPath;
 
 public:
-    explicit animationWidget(/*Graph &Graphmodel,*/ QWidget *parent = nullptr);
+    explicit animationWidget(vector<Edge> eulerPath, QWidget *parent = nullptr);
     ~animationWidget();
+
+    void eulerAnimation();
 
 public slots:
     void setAnimationStatus(bool);

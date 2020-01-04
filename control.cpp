@@ -38,10 +38,13 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
                 _selectedNode = model.clickedOnNode(dynamic_cast<QMouseEvent*>(event)->x()/width
                                                   , dynamic_cast<QMouseEvent*>(event)->y()/height);
             }
+            //Linksklick&&Shift
             if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
                 connect(dynamic_cast<QMouseEvent*>(event));
+            //LinksKnick
             else if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
                 add(dynamic_cast<QMouseEvent*>(event));
+            //RechtsKlick&&Shift
             else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
                 remove(dynamic_cast<QMouseEvent*>(event));
             break;
