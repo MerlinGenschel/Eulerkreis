@@ -95,7 +95,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
         */
 }
 
-void paint::animationEvent(QPaintEvent *event,int i)
+void paint::animationEvent(Edge edg,QPaintEvent *event)
 {
     const double breite = width();
     const double hoehe  = height();
@@ -103,9 +103,9 @@ void paint::animationEvent(QPaintEvent *event,int i)
     vector<Edge> path = model.getPath();
     QPainter p(this);
     p.setPen(QPen(Qt::green));
-    p.drawLine(static_cast<int>(model.getCoord(path[i].src).first * breite)
-                , static_cast<int> (model.getCoord(path[i].src).second * hoehe)
-                , static_cast<int>(model.getCoord(path[i].dest).first * breite)
-                , static_cast<int> (model.getCoord(path[i].dest).second * hoehe));
+    p.drawLine(static_cast<int>(model.getCoord(edg.src).first * breite)
+                , static_cast<int> (model.getCoord(edg.src).second * hoehe)
+                , static_cast<int>(model.getCoord(edg.dest).first * breite)
+                , static_cast<int> (model.getCoord(edg.dest).second * hoehe));
 
 }

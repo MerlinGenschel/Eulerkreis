@@ -34,6 +34,7 @@ void animation::setSpeed(int val)
 }
 void animation::timerEvent(QTimerEvent *event)
 {
+
     //timerevent für färben der kanten
 }
 

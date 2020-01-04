@@ -20,7 +20,7 @@ public:
 protected:
    void paintEvent(QPaintEvent* event) ;
 
-   void animationEvent(QPaintEvent* event,int i);
+   void animationEvent(Edge edg,QPaintEvent* event);
 
 
 
