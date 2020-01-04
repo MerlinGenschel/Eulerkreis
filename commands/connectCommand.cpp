@@ -19,4 +19,5 @@ void connectCommand::redo()
 {
     if(model)
         model->addEdge(src, dest);
+
 }

@@ -20,5 +20,8 @@ void addNodeCommand::undo()
 void addNodeCommand::redo()
 {
     if(model)
+    {
         model->addNode(pos.x(), pos.y());
+        id = model->clickedOnNode(pos.x(), pos.y());
+    }
 }

@@ -32,9 +32,10 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
         // cast auf speziellen Typ durchführen und die speziellen Event-Methoden aufrufen
         case QEvent::MouseButtonPress:
             if(true)
-             {  const double width = view.width();
+            {
+                const double width   = view.width();
                 const double height  = view.height();
-                _selectedNode=model.clickedOnNode(dynamic_cast<QMouseEvent*>(event)->x()/width
+                _selectedNode = model.clickedOnNode(dynamic_cast<QMouseEvent*>(event)->x()/width
                                                   , dynamic_cast<QMouseEvent*>(event)->y()/height);
             }
             if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
@@ -60,7 +61,7 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
 // Knoten hinzufügen
 void control::add(QMouseEvent* event)
 {
-    const double width = view.width();
+    const double width   = view.width();
     const double height  = view.height();
 
     QPointF pos(event->x()/width
@@ -72,11 +73,11 @@ void control::add(QMouseEvent* event)
 // Knoten löschen
 void control::remove(QMouseEvent* event)
 {
-    const double width = view.width();
+    const double width   = view.width();
     const double height  = view.height();
 
     int index = model.clickedOnNode(event->x()/width
-                                      , event->y()/height);
+                                  , event->y()/height);
     if (activeNodeValid(event))
         undoStack->push(new removeNodeCommand(&model, index));
 }
@@ -84,18 +85,18 @@ void control::remove(QMouseEvent* event)
 // Knoten verbinden
 void control::connect(QMouseEvent* event)
 {
-    const double width = view.width();
+    const double width   = view.width();
     const double height  = view.height();
 
     if(activeNodeValid(event))
     {
         model.toConnect[NullOderEins] = model.clickedOnNode(event->x()/width
-                                                                , event->y()/height);
+                                                          , event->y()/height);
         control::NullOderEins = (NullOderEins+1)%2;
     }
-    if((model.toConnect[0] != -1  && model.toConnect[1] != -1))
+    if(model.toConnect[0] != -1  && model.toConnect[1] != -1)
     {
-        undoStack->push(new connectCommand(&model, model.toConnect[0],model.toConnect[1]));
+        undoStack->push(new connectCommand(&model, model.toConnect[0], model.toConnect[1]));
         model.toConnect[0] = -1;
         model.toConnect[1] = -1;
     }
@@ -105,14 +106,8 @@ void control::connect(QMouseEvent* event)
 // Knoten verschieben
 void control::move(QMouseEvent* event)
 {
-    const double width = view.width();
-    const double height  = view.height();
     if (activeNodeValid(event))
     {
-        //int index = model.clickedOnNode(event->pos().x()/width
-        //                                 , event->pos().y()/height);
-        //qDebug()<< "index ="<<index;
-
         QPointF newPos(event->x()/static_cast<double>(view.width())
                      , event->y()/static_cast<double>(view.height()));
 
@@ -141,17 +136,13 @@ void control::keyPressEvent(QKeyEvent* event)
 // Prüfen um der aktueller Knoten-Index gültig ist
 bool control::activeNodeValid(QMouseEvent* event) const
 {
-    //return activeNode < model.getSize();
-
     const double width   = view.width();
     const double height  = view.height();
 
     int index = model.clickedOnNode(event->x()/width
-                                    , event->y()/height);
-
+                                  , event->y()/height);
     if (index != -1)
         return true;
-
 }
 
 
