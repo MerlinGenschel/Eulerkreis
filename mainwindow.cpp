@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dockwidget.h"
+#include "animationwidget.h"
 #include "dialoghelp.h"
 #include "Graph.h"
 #include "paint.h"
@@ -131,7 +132,11 @@ void MainWindow::on_actionSpeichern_triggered()
 
 void MainWindow::on_actionEulerkreis_triggered()
 {
-    if(model->printEulerWeg())
+
+
+    animationWidget *ani = new animationWidget(this);
+    addDockWidget(Qt::TopDockWidgetArea, ani);
+   /* if(model->printEulerWeg())
     {
         vector<Edge>eulerPath = model->getPath();
         if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
@@ -145,7 +150,7 @@ void MainWindow::on_actionEulerkreis_triggered()
     else
     {
          qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
-    }
+    }*/
 
 }
 

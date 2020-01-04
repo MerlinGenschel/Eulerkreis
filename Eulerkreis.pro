@@ -17,6 +17,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Graph.cpp \
+    animation.cpp \
+    animationwidget.cpp \
     dialoghelp.cpp \
     dockwidget.cpp \
     main.cpp \
@@ -31,6 +33,8 @@ SOURCES += \
 
 HEADERS += \
     Graph.h \
+    animation.h \
+    animationwidget.h \
     dialoghelp.h \
     dockwidget.h \
     mainwindow.h \
@@ -43,8 +47,10 @@ HEADERS += \
     memento.h
 
 FORMS += \
+    animationwidget.ui \
     dialoghelp.ui \
     dockwidget.ui \
+    dockwidgetani.ui \
     mainwindow.ui
 
 # Default rules for deployment.
