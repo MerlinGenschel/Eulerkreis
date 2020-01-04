@@ -14,18 +14,13 @@ removeNodeCommand::removeNodeCommand(Graph* model, int id)
 void removeNodeCommand::undo()
 {
     if(model)
-    {
         model->addNode(pos.x(), pos.y());
-        //id = model->clickedOnNode(pos.x(), pos.y());
-    }
 }
 
 void removeNodeCommand::redo()
 {
+    pos = QPointF(model->getCoord(id).first
+                , model->getCoord(id).second);
     if(model)
-    {
         model->removeNode(id);
-        pos = QPointF(model->getCoord(id).first
-                    , model->getCoord(id).second);
-    }
 }
