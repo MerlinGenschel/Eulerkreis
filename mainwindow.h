@@ -51,5 +51,8 @@ private:
     QAction *redo;
     QString nameAkt;
     void closeEvent(QCloseEvent *event);
+    void save();
+    void saveAs();
+    void load();
 };
 #endif // MAINWINDOW_H

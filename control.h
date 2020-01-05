@@ -20,7 +20,7 @@ class control : public QObject
     // Referenzen auf die beiden Objekte (keine Kopie oder eigene Objekte!)
     Graph& model;
     paint& view;
-
+    QUndoStack *undoStack = nullptr;
 
 
     // Methoden um die Events zu handhaben, sie werden durch eventFilter und nicht automatisch aufgerufen
@@ -44,9 +44,13 @@ class control : public QObject
     //zuVerbiden Array der aktuelle Index gespeichert werden soll
     size_t NullOderEins = 0;
 
-public:
-    QUndoStack *undoStack = nullptr;
 
+
+public:
+    //Setzen des Clean-Status zur Abfrage, ob gespeichert werden muss
+    void deleteUndoStack();
+    //Abfrage, ob gespeichert werden muss
+    bool cleanUndoStack() const;
     // für Modusauswahl
     enum class Mode {zeichnen = 1, verbinden, verschieben, loeschen};
     Mode mod = Mode::zeichnen;

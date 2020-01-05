@@ -6,6 +6,7 @@ DialogHelp::DialogHelp(QWidget *parent) :
     ui(new Ui::DialogHelp)
 {
     ui->setupUi(this);
+    setModal(false);
 }
 
 DialogHelp::~DialogHelp()
