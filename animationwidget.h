@@ -17,7 +17,7 @@ class Animationswidget : public QWidget
 public:
     explicit Animationswidget(QWidget *parent = nullptr);
 
-
+    void fillAnimationWidget();
 public slots:
     void setzeAnimationsstatus(bool);
     void setzeAnimationsgeschwindigkeit(int);

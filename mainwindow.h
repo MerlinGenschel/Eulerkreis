@@ -45,11 +45,16 @@ private slots:
 
     void on_actionNeu_triggered();
 
+
 private:
     Ui::MainWindow *ui;
     control *controller =nullptr;
     QAction *undo;
     QAction *redo;
     QString nameAkt;
+    void closeEvent(QCloseEvent *event);
+    void save();
+    void saveAs();
+    void load();
 };
 #endif // MAINWINDOW_H

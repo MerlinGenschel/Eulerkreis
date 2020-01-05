@@ -128,6 +128,21 @@ bool control::activeNodeValid(QMouseEvent* event) const
         return true;
 }
 
+//Clean-Status für UndoStack setzen
+void control::deleteUndoStack()
+{
+    undoStack->setClean();
+}
+
+//Prüfe den Clean-Status des UndoStack
+bool control::cleanUndoStack() const
+{
+    if (undoStack->isClean() == false)
+        return true;
+    else
+        return false;
+}
+
 // Mous setzten
 void control::setMode(int m)
 {
