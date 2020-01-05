@@ -176,5 +176,25 @@ void MainWindow::on_actionEulerkreis_triggered()
 void MainWindow::on_actionNeu_triggered()
 {
        if (!model->getSize()==0)
-       model->clear();
+           model->clear();
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis schließen", tr("Wollen Sie das Programm wirklich schließen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
+    if(endButton == QMessageBox::Yes)
+        event->accept();
+    else if (endButton == QMessageBox::Save)
+    {
+        if (nameAkt.isEmpty())
+        {
+            nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+            model->writeToFile(nameAkt.toUtf8().constData());
+        }
+        else
+            if (!nameAkt.isEmpty())
+            model->writeToFile(nameAkt.toUtf8().constData());
+    }
+    else
+        event->ignore();
 }
