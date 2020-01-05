@@ -153,6 +153,7 @@ void Graph::readFromFile(const string &dateiName)
 
 
     fin.close() ;
+    resetPath();
 }
 
 
@@ -162,12 +163,13 @@ void Graph::addNode(double x, double y)
     _numNodes++;
     adjList.resize(_numNodes);
     _coordList.push_back(make_pair(x,y));
+    resetPath();
     emit(graphChanged());
 
 }
 void Graph::removeNode(int index)
 {
-    qDebug()<<"Remove "<<index;
+    //qDebug()<<"Remove "<<index;
     //Prüfe, ob Index gültig ist
     if (!(index >= _numNodes) && index >= 0)
     {
@@ -203,6 +205,7 @@ void Graph::removeNode(int index)
              _numNodes--;
 
     //Graph hat sich geändert
+    resetPath();
     emit(graphChanged());
 
     }
@@ -279,7 +282,9 @@ void Graph::addEdge(int src, int dest)
     }
 
     //emit(graphChanged());
-    }emit(graphChanged());
+    }
+    resetPath();
+    emit(graphChanged());
     }
     else
         qDebug()<< "addEdge hat ungültige Parameter bekommen";

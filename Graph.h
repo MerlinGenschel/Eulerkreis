@@ -86,12 +86,13 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
 
 //Methoden
+
     //Soll den eulerPfad wieder löschen, wenn der Graph seit dem letzten durchlauf des Algos
     //wieder geändert wurde
-
     void resetPath()
     {
-
+    eulerPath.clear();
+    edgeToColor=-1;
     }
 
 

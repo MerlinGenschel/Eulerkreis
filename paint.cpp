@@ -33,6 +33,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
     
     QPainter p(this);
 
+
     //hier werden bisher NUR die Knoten gezeichnet
     //20 cm Radius bisher Hardkodiert
     for(int i=0; i< model.getSize();i++) // statt des direkten Zugriffs erfolgt hier jetzt eine Nachfrage beim Modell, dieses liefert die aktuelle Quadrateliste
@@ -114,7 +115,18 @@ void paint::paintEvent(QPaintEvent* /*event*/)
         }
 
 
-
+    //Zeige die Nummer der Animierten Kante (falls vorhanden) an
+    p.setPen(QPen(Qt::black));
+    QPoint pos;
+    pos.setX(0.8*breite);
+    pos.setY(0.85*hoehe);
+    QFont font=p.font() ;
+     font.setPointSize ( 24 );
+     //font.setWeight(QFont::DemiBold);
+     p.setFont(font);
+     QString s = QString::number(model.edgeToColor);
+     if(model.edgeToColor!=-1)
+        p.drawText(pos,s);
 }
 
 void paint::animationEvent( )
