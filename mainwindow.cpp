@@ -97,13 +97,22 @@ void MainWindow::on_action_ffnen_triggered()
 
 void MainWindow::on_actionKnoten_zeichnen_triggered()
 {
-   //control::setMode(1);
-
+    controller->setMode(1);
 }
 
 void MainWindow::on_actionVerbinden_triggered()
 {
-    //control::setMode(2);
+    controller->setMode(2);
+}
+
+void MainWindow::on_actionVerschieben_triggered()
+{
+    controller->setMode(3);
+}
+
+void MainWindow::on_actionL_schen_triggered()
+{
+    controller->setMode(4);
 }
 
 void MainWindow::on_actionSpeichern_unter_triggered()

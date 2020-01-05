@@ -38,23 +38,21 @@ bool control::eventFilter(QObject* /*watched*/, QEvent* event)
                 _selectedNode = model.clickedOnNode(dynamic_cast<QMouseEvent*>(event)->x()/width
                                                   , dynamic_cast<QMouseEvent*>(event)->y()/height);
             }
-            //Linksklick&&Shift
-            if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
+            // verbinden: Modus verbinden + Linksklick
+            if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && mod == Mode::verbinden)
                 connect(dynamic_cast<QMouseEvent*>(event));
-            //LinksKnick
-            else if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton)
+            // Knoten hinzufügen: Mous Knoten hinzufügen + LinksKnick
+            else if(dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && mod == Mode::zeichnen)
                 add(dynamic_cast<QMouseEvent*>(event));
-            //RechtsKlick&&Shift
-            else if (dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))
+            // löschen: Modus löschen + Linksklick ODER Modus Knoten hinzufügen + Rechtsklick
+            else if ((dynamic_cast<QMouseEvent*>(event)->button() == Qt::RightButton && mod == Mode::zeichnen)
+                     || (dynamic_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && mod == Mode::loeschen))
                 remove(dynamic_cast<QMouseEvent*>(event));
             break;
         case QEvent::MouseMove:
-            if (dynamic_cast<QMouseEvent*>(event)->buttons() & Qt::RightButton/* && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier)*/)
+            if (dynamic_cast<QMouseEvent*>(event)->buttons() & Qt::LeftButton && mod == Mode::verschieben)
                 move(dynamic_cast<QMouseEvent*>(event));
             break;
-        /*case QEvent::KeyPress:
-            keyPressEvent(dynamic_cast<QKeyEvent*>(event));
-            break;*/
         default:
             return false;
     }
@@ -117,25 +115,7 @@ void control::move(QMouseEvent* event)
         undoStack->push(new moveCommand(&model, _selectedNode, newPos));
     }
 }
-/*
-void control::keyPressEvent(QKeyEvent* event)
-{
 
-    if(!activeNodeValid(event)) // kein aktives Quadrat, Tastendrücke müssen nicht beachtet werden (Achtung: hierbei werden Tastendrücke weitergeleitet die ansonsten abgefangen worden wären)
-        return event->ignore(); // Weiterleitung der Tastendrücke an QWidget und damit an die übergeordneten Widgets
-
-    switch(event->key()) // Aktionen für die Tasten aufstellen
-    {
-        case Qt::Key_Delete:
-            model.removeNode(activeNode); // Modell anweisen, das Qudarat zu löschen
-            activeNode = std::numeric_limits<std::size_t>::max(); // aktives Quadrad auf ungültigen Wert setzen
-            break;
-        default: // keine Taste die bearbeitet wird -> Aufruf der Methode vom Elternobjekt
-            return event->ignore();
-    }
-
-}
-*/
 // Prüfen um der aktueller Knoten-Index gültig ist
 bool control::activeNodeValid(QMouseEvent* event) const
 {
@@ -148,74 +128,15 @@ bool control::activeNodeValid(QMouseEvent* event) const
         return true;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
- /*   //STRG Taste zum Verbinden
-        //std::cout << "Test";
-
-       if(event->button() == Qt::LeftButton && QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier))  //VerbindenModus
-        {
-            //qDebug() << "Verbinden";
-            if(model.clickedOnNode(_x,_y)!=-1)
-            {
-                //an methode in Graph delegieren, dort auch signal aussenden
-                model.toConnect[NullOderEins] = model.clickedOnNode(_x,_y);
-                control::NullOderEins = (NullOderEins+1)%2;
-                emit(model.graphChanged());
-            }
-            //qDebug() << toConnect[0];
-            //qDebug() << toConnect[1];
-            if((model.toConnect[0]!=-1  && model.toConnect[1]!=-1))
-            {
-                model.addEdge(model.toConnect[0],model.toConnect[1]);
-                model.toConnect[0]=-1;
-                model.toConnect[1]=-1;
-
-            }
-            //undoStack mit einbinden Isi
-
-        }
-   else if(event->button() == Qt::LeftButton)  //ZeichnenModus
-    {
-        //undoStack einfügen Isi
-        model.addNode(_x,_y);
-    }
-
-
-   else if (event->button() == Qt::RightButton && event->modifiers() & Qt::Key_Shift)
-    {
-           int index = model.clickedOnNode(_x,_y);
-           if (index != -1)
-           {
-           QPointF newPos(event->x()/static_cast<double>(view.width())
-                          , event->y()/static_cast<double>(view.height()));
-
-           undoStack->push(new moveCommand(&model, activeNode, newPos));
-           }
-           //verschieben--> Alexej
-
-
-    }
-
-
-    else if(event->button() == Qt::RightButton)  //Löschen Modus
-    {
-           int index = model.clickedOnNode(_x,_y);
-           if (index != -1)
-                   model.removeNode(index);
-           //undoStack Isi
-    }
-
-
+// Mous setzten
+void control::setMode(int m)
+{
+    if(m == 1)
+        mod = Mode::zeichnen;
+    else if(m == 2)
+        mod = Mode::verbinden;
+    else if(m == 3)
+        mod = Mode::verschieben;
+    else if(m == 4)
+        mod = Mode::loeschen;
 }
-*/

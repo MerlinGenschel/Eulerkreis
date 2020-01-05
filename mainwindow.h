@@ -31,10 +31,13 @@ private slots:
 
     void on_actionVerbinden_triggered();
 
+    void on_actionVerschieben_triggered();
+
+    void on_actionL_schen_triggered();
+
     void on_actionSpeichern_unter_triggered();
 
     void on_actionSpeichern_triggered();
-
 
     void on_actionEulerkreis_triggered();
 

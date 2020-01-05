@@ -9,7 +9,8 @@ class QUndoStack;
 
 class paint;    //View
 class Graph;    //Modell
-//enum class MODE {zeichnen=1 ,verbinden,verschieben,loeschen};
+
+enum class Mode;
 
 class control : public QObject
 {
@@ -29,56 +30,31 @@ class control : public QObject
     void remove(QMouseEvent* event);
     void connect(QMouseEvent* event);
     void move(QMouseEvent* event);
-    void keyPressEvent(QKeyEvent* event);
 
     // Die Steuerung ist dafür zuständig, welcher Knoten ausgewählt ist. Wird für die Interaktion benötigt
     int activeNode = std::numeric_limits<int>::max(); // Index des angeklickten/ausgewählten Knotens
 
+    // Prüfen ob aktiver Knoten gültig ist
     bool activeNodeValid(QMouseEvent* event) const;
 
+    // index des ausgewählten Knotens
     int _selectedNode;
 
     //Soll zwischen NUll und Eins wechseln um festzulegen an welcher Stelle im
     //zuVerbiden Array der aktuelle Index gespeichert werden soll
     size_t NullOderEins = 0;
-   //bool linienDickeSkalieren = false;
-public:
 
-    //static int modus;
-//*** Konstruktoren ***//
+public:
+    // für Modusauswahl
+    enum class Mode {zeichnen = 1, verbinden, verschieben, loeschen};
+    Mode mod = Mode::zeichnen;
+    void setMode(int m);
+    Mode getMode() {return mod;}
+
+    // Konstruktor
     control(Graph& model, paint& view, QUndoStack *undoStack, QObject *parent=nullptr);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
-
-
-    /*
-    static void setMode(size_t i)
-    {
-
-        if (i == 1)
-        {
-            std::cout << "modus auf Zeichnen" << std::endl;
-            modus= 1;
-        }
-        else if (i ==2)
-        {
-            std::cout << "modus auf verbinden" << std::endl;
-            modus = 2;
-        }
-        else if (i ==3)
-        {
-            modus = 2;
-        }
-        else if (i==4)
-        {
-            modus = 4;
-        }
-
-
-    }
-    */
-
-
 };
 
 #endif // CONTROL_H
