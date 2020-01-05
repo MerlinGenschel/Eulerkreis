@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>448</width>
-    <height>216</height>
+    <width>479</width>
+    <height>188</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,9 @@
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
+    </item>
+    <item>
+     <widget class="QListView" name="eulerResult"/>
     </item>
    </layout>
   </widget>

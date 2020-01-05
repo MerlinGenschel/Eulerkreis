@@ -50,7 +50,6 @@ FORMS += \
     animationwidget.ui \
     dialoghelp.ui \
     dockwidget.ui \
-    dockwidgetani.ui \
     mainwindow.ui
 
 # Default rules for deployment.

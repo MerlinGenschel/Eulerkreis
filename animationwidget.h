@@ -24,7 +24,7 @@ public:
     ~animationWidget();
 
     void eulerAnimation();
-
+    void fillAnimationWidget();
 public slots:
     void setAnimationStatus(bool);
     void setAnimationSpeed(int);

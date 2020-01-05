@@ -8,6 +8,7 @@ animationWidget::animationWidget(vector<Edge>eulerPath, QWidget *parent) :
     ui(new Ui::AnimationWidget)
 {
     ui->setupUi(this);
+    fillAnimationWidget();
 }
 
 animationWidget::~animationWidget()
@@ -31,6 +32,30 @@ void animationWidget::eulerAnimation()
     }
 }
 
+void animationWidget::fillAnimationWidget()
+{
+    string result;
+    if(!_eulerPath.empty())
+    {
+    if(_eulerPath[0].src == _eulerPath[_eulerPath.size()-1].dest)
+    {
+            qDebug()<<"Kreis";
+            result.append("Ja, das ist ein Eulerkreis!");
+     }
+        else
+            {
+            qDebug()<<"Eulerweg";
+            result.append("Das ist leider kein Eulerkreis...");
+            }
+    }
+    model = new QStringListModel(this);
+    QStringList eulerResult;
+    eulerResult << QString::fromStdString(result);
+    model->setStringList(eulerResult);
+    ui->eulerResult->setModel(model);
+
+}
+
 void animationWidget::setAnimationStatus(bool)
 {
     QSignalBlocker block(this);
@@ -42,3 +67,4 @@ void animationWidget::setAnimationSpeed(int v)
     QSignalBlocker block(this);
     ui->horizontalSlider->setValue(v);
 }
+
