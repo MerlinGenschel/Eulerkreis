@@ -86,6 +86,14 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
 
 
 //Methoden
+    //Soll den eulerPfad wieder löschen, wenn der Graph seit dem letzten durchlauf des Algos
+    //wieder geändert wurde
+
+    void resetPath()
+    {
+
+    }
+
 
     //Algo zur bestimmung ob es sich um einen Eulerkreis handelt
     //gibt einen Vector mit den Indizes der Knoten wieder, so wie der Algo von Fleury es bestimmt hat

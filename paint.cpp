@@ -75,7 +75,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                         &&  path.at(edg).src==i
                         &&  path.at(edg).dest==edges[k]                    )
                 {
-                    qDebug()<<"Rot";
+                    //qDebug()<<"Rot";
                     p.setPen(QPen(Qt::red) );
                     p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
                                 , static_cast<int> (model.getCoord(i).second * hoehe)
@@ -87,7 +87,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
                         &&  path.at(edg).dest==i
                         &&  path.at(edg).src==edges[k]                    )
                 {
-                    qDebug()<<"Rot";
+                    //qDebug()<<"Rot";
                     p.setPen(QPen(Qt::red) );
                     p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
                                 , static_cast<int> (model.getCoord(i).second * hoehe)
@@ -98,7 +98,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
 
                 else
                 {
-                    qDebug()<<"Schwarz";
+                  //qDebug()<<"Schwarz";
                   p.setPen(QPen(Qt::black) );
                   p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
                               , static_cast<int> (model.getCoord(i).second * hoehe)
