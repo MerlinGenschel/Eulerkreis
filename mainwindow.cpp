@@ -2,21 +2,26 @@
 #include "ui_mainwindow.h"
 #include "dockwidget.h"
 #include "animationwidget.h"
+#include "animation.h"
 #include "dialoghelp.h"
 #include "Graph.h"
 #include "paint.h"
 #include "control.h"
 
+#include<QVBoxLayout>
 #include <QMessageBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QUndoStack>
 #include <string>
+#include "animation.h"
+#include "animationwidget.h"
 
 //class Graph;
 
-
+class Animation;
+class animationWidget;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,14 +29,33 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
+
+
     QUndoStack *undoStack = new QUndoStack(this);
     // ui->actionBeenden();
+    
+    Animationswidget* animationswidget  = new Animationswidget;
+
     model                      = new Graph(this);
-    paint *view          = new paint(*model);
+    view          = new paint(*model);
     /*control *controller = new control(*model,*view, undoStack, this);*/
+
     controller = new control(*model,*view, undoStack, this);
+
+    Animationspresenter* animationscontroller = new Animationspresenter(*model, this);
+
+    animationscontroller->addAnimationswidget(*animationswidget);
+    //animation* animationspresenter = new animation(*model,*view,undoStack,parent);
+    //animationWidget* animationswidget  = new animationWidget(*model,*view,parent);
+    //animationspresenter->addAnimationswidget(*animationswidget);
     //control::modus = 1;
-    setCentralWidget(view);
+
+
+    QWidget* widget = new QWidget;
+    QVBoxLayout* layout = new QVBoxLayout(widget);
+    layout->addWidget(view);
+    layout->addWidget(animationswidget);
+    setCentralWidget(widget);
 
     undo = undoStack->createUndoAction(this);
     redo = undoStack->createRedoAction(this);
@@ -144,32 +168,34 @@ void MainWindow::on_actionSpeichern_triggered()
 void MainWindow::on_actionEulerkreis_triggered()
 {
     if (model->printEulerWeg())
-    {
-
-    vector<Edge>eulerPath = model->getPath();
-    emit(model->graphChanged());
-    animationWidget *ani = new animationWidget(eulerPath, this);
-    addDockWidget(Qt::TopDockWidgetArea, ani);
-    ani->eulerAnimation();
-
-   /* if(model->printEulerWeg())
-    {
-        vector<Edge>eulerPath = model->getPath();
-        if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
-            qDebug()<<"Kreis";
-        else
-            qDebug()<<"Eulerweg";
-        for(int i = 0;i<eulerPath.size();i++)
-            qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
-
-    }
-    else
-    {
-         qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
-    }*/
+        qDebug()<<"Es gibt einen EulerWeg/Eulerkreis: Klicke auf Animation um die Animation zu starten";
+    //qDebug()<<model->getPath().size();
+    //if (model->printEulerWeg())
+    //{
+    ////vector<Edge>eulerPath = model->getPath();
+    ////emit(model->graphChanged());
+    //Animationswidget *ani = new Animationswidget(this);
+    ////addDockWidget(Qt::TopDockWidgetArea, ani);
+    ////ani->eulerAnimation(  );
+    //
+   ///* if(model->printEulerWeg())
+    //{
+    //    vector<Edge>eulerPath = model->getPath();
+    //    if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
+    //        qDebug()<<"Kreis";
+    //    else
+    //        qDebug()<<"Eulerweg";
+    //    for(int i = 0;i<eulerPath.size();i++)
+    //        qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
+    //
+    //}
+    //else
+    //{
+    //     qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
+    //}*/
 
 }
-}
+
 
 
 

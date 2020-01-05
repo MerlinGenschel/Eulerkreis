@@ -537,6 +537,7 @@ void Graph::clear()
     adjList.clear();
     _numEdges=0;
     _numNodes=0;
+    emit(graphChanged());
 }
 
 

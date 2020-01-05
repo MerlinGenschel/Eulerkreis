@@ -1,35 +1,85 @@
-#ifndef ANIMATION_H
-#define ANIMATION_H
+#ifndef ANIMATIONSCONTROLLER_H
+#define ANIMATIONSCONTROLLER_H
+
 
 #include <QObject>
-#include <QUndoStack>
-#include<QColor>
 
 class Graph;
-class animation:public QObject
+class Animationswidget;
+
+class Animationspresenter: public QObject
 {
     Q_OBJECT
 
-    Graph &model;
-    QUndoStack *undoStack =nullptr;
+    Graph& modell;
 
-    double speed = 0.01;
+    double geschwindigkeit = 0.01;
     const int maxSlider = 100;
-    const double maxSpeed = 1./50.;
+    const double maxGeschwindigkeit = 1./50.;
+
+    // Event für die Animation, analog zu der alten Implementierung
     void timerEvent(QTimerEvent* event) override;
-    int animationtimer =0;
-    std::vector<QColor>color;
+
+    int animationstimer = 0; // TimerID für die Animation
 
 public:
-   animation(Graph &model, QUndoStack *undoStack, QObject *parent = nullptr);
+    Animationspresenter(Graph& modell, QObject *parent = nullptr);
+
+    void addAnimationswidget(Animationswidget& ansicht);
 
 private slots:
+    void setzeAnimationsstatus(bool aktiv);
+    void setzeGeschwindigkeit(int wert);
 
-    void setAnimationStatus(bool active);
-    void setSpeed(int val);
 signals:
-    void newAnimationStatus(bool active);
-    void newAnimationSpeed(int val);
+    void neuerAnimationsstatus(bool aktiv);
+    void neueAnimationsgeschwindigkeit(int val);
 };
 
-#endif // ANIMATION_H
+#endif // ANIMATIONSCONTROLLER_H
+
+
+//#ifndef ANIMATION_H
+//#define ANIMATION_H
+//
+//#include <QObject>
+//#include <QUndoStack>
+//#include<QColor>
+//#include"animationwidget.h"
+//class Edge;
+//class paint;
+//class Graph;
+//class animation:public QObject
+//{
+//    Q_OBJECT
+//
+//    Graph &model;
+//    paint &view;
+//    QUndoStack *undoStack =nullptr;
+//
+//    int aniEdge=0;
+//
+//    double speed = 0.01;
+//    const int maxSlider = 100;
+//    const double maxSpeed = 1./50.;
+//    void timerEvent(QTimerEvent* event) override;
+//    int animationtimer =0;
+//    std::vector<QColor>color;
+//
+//public:
+//   animation(Graph &model, paint &view,QUndoStack *undoStack, QObject *parent);
+//
+//   void addAnimationswidget(animationWidget &ansicht);
+//
+//private slots:
+//
+//    void setAnimationStatus(bool active);
+//    void setSpeed(int val);
+//public:
+//signals:
+//    void newAnimationStatus(bool active);
+//    void newAnimationSpeed(int val);
+//    void animationChanged();
+//};
+//
+//#endif // ANIMATION_H

@@ -20,11 +20,18 @@ public:
 protected:
    void paintEvent(QPaintEvent* event) ;
 
-   void animationEvent(Edge edg,QPaintEvent* event);
 
 
 
-public:
+
+public slots:
+   void animationEvent();
+
+
+
+//signals:
+//    void newAnimationStatus(bool active);
+//    void newAnimationSpeed(int val);
 };
 
 #endif // PAINT_H

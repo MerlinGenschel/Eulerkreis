@@ -60,52 +60,66 @@ void paint::paintEvent(QPaintEvent* /*event*/)
     //Kanten
     for(size_t i=0; i < model.getSize();i++)
         {
-            p.setPen(QPen(Qt::black) );
+
             vector<int> edges = model.getEdges(i);
             size_t numEdges = edges.size();
 
+            vector<Edge> path = model.getPath();
             for(size_t k = 0; k< numEdges;k++)
             {
-            //qDebug() << "kante zwischen " << i << " und " << k;
-            p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
-                        , static_cast<int> (model.getCoord(i).second * hoehe)
-                        , static_cast<int>(model.getCoord(edges[k]).first * breite)
-                        , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
-            }
+
+                //Grüne Kanten
+                int edg = model.edgeToColor;
+                if (!path.empty()
+                        &&  edg !=-1 && edg < path.size()
+                        &&  path.at(edg).src==i
+                        &&  path.at(edg).dest==edges[k]                    )
+                {
+                    qDebug()<<"Rot";
+                    p.setPen(QPen(Qt::red) );
+                    p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
+                                , static_cast<int> (model.getCoord(i).second * hoehe)
+                                , static_cast<int>(model.getCoord(edges[k]).first * breite)
+                                , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
+                }
+                else if(!path.empty()
+                        &&  edg !=-1 && edg < path.size()
+                        &&  path.at(edg).dest==i
+                        &&  path.at(edg).src==edges[k]                    )
+                {
+                    qDebug()<<"Rot";
+                    p.setPen(QPen(Qt::red) );
+                    p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
+                                , static_cast<int> (model.getCoord(i).second * hoehe)
+                                , static_cast<int>(model.getCoord(edges[k]).first * breite)
+                                , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
+                }
+
+
+                else
+                {
+                    qDebug()<<"Schwarz";
+                  p.setPen(QPen(Qt::black) );
+                  p.drawLine(static_cast<int>(model.getCoord(i).first * breite)
+                              , static_cast<int> (model.getCoord(i).second * hoehe)
+                              , static_cast<int>(model.getCoord(edges[k]).first * breite)
+                              , static_cast<int> (model.getCoord(edges[k]).second * hoehe));
+                }
+
+
+
+
+            }//end for
 
         }
-    /*
 
-    if(!model.getPath().empty())
-    {
-        p.setPen(QPen(Qt::green));
-        vector<Edge> path =model.getPath();
-        qDebug()<<"jka";
-        for(int i = 0;i<path.size();i++)
-        {
-            p.drawLine(static_cast<int>(model.getCoord(path[i].src).first * breite)
-                        , static_cast<int> (model.getCoord(path[i].src).second * hoehe)
-                        , static_cast<int>(model.getCoord(path[i].dest).first * breite)
-                        , static_cast<int> (model.getCoord(path[i].dest).second * hoehe));
-    qDebug()<<i;
 
-            QThread::msleep(500);       //"Schlafe" 500msec - sehr unelegant, nur vom prizip her
-        }
-        }
-        */
+
 }
 
-void paint::animationEvent(Edge edg,QPaintEvent *event)
+void paint::animationEvent( )
 {
-    const double breite = width();
-    const double hoehe  = height();
-
-    vector<Edge> path = model.getPath();
-    QPainter p(this);
-    p.setPen(QPen(Qt::green));
-    p.drawLine(static_cast<int>(model.getCoord(edg.src).first * breite)
-                , static_cast<int> (model.getCoord(edg.src).second * hoehe)
-                , static_cast<int>(model.getCoord(edg.dest).first * breite)
-                , static_cast<int> (model.getCoord(edg.dest).second * hoehe));
 
 }
+
+

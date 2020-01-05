@@ -8,11 +8,13 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 class control;
 class Graph;
+class paint;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     Graph* model;
+    paint* view;
 
 public:
     MainWindow(QWidget *parent = nullptr);

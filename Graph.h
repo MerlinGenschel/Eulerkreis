@@ -33,6 +33,7 @@ class Graph:public QObject
     //Konstruiere einen Verktor mit double-paaren um die Koordinaten zu speichern
     vector<pair<double,double>> _coordList;
 
+
     //Anzahl der Knoten in dem Graph;
     int _numNodes=0;
 
@@ -41,6 +42,7 @@ class Graph:public QObject
 
     //vector of edges for the eulercircle
     vector<Edge> eulerPath;
+
 
     // Vector von vectoren von ints - die Adjazenzliste
     vector<vector<int>> adjList;
@@ -51,7 +53,7 @@ class Graph:public QObject
     //Vector von bools um im Algo festzustellen, ob alle Knoten besucht wurden (evtl mehr als eine ZHK)
     vector<bool> _besucht;
 public:
-
+    int edgeToColor =-1;
 
 
     //Standard Konstruktor
@@ -112,6 +114,32 @@ Graph( string const& dateiName, bool gerichtet = false );  // Graph::Graph()
         return adjList[i];
     }
 
+
+
+    //Die ind der Animation zu färbende Kante wird geändert
+    void newEdgeToColor()
+    {
+        emit(graphChanged());
+        edgeToColor++;
+
+        if(edgeToColor==eulerPath.size())
+            edgeToColor-=eulerPath.size();
+
+
+        ////qDebug()<< "In newEdgetoColor";
+        ////edgeToColor= (edgeToColor+1)%3;
+        //if(edgeToColor != -1 &&edgeToColor +1 >=  getPath().size())
+        //{
+        //    qDebug()<< "elerpath.clear()";
+        //    edgeToColor=0;
+        //
+        //}
+        //else
+        //    edgeToColor++;
+        //qDebug()<<"edgeToColor=" <<edgeToColor,
+        //emit(graphChanged());
+
+    }
     //Schreibe den Graphen in eine Datei
     //Es wird davon ausgegangen, dass die Datei erstellt/ überschrieben werden darf
     void writeToFile(string const& dateiName);
@@ -217,6 +245,14 @@ signals:
     void graphChanged(); // Dieses Signal wird immer dann gesendet (durch einen Funktionsaufruf in der Klasse), wenn sich die Daten geändert haben
     // dies kann sicher bestimmt werden, da die Daten privat, also gekapselt sind. Ein schreibener Zugriff erfolgt also ausschließlich durch die Methoden.
 
+public slots:
+    //Slot der die zu färbende kante ändert und dann das Signal GraphChanged aufruft um einen repaint auszuführen.
+    //void aniChanged()
+    //{
+    //    qDebug()<<"anichanged";
+    //    if(newEdgeToColor())
+    //        emit(graphChanged());
+    //}
 };
 
 #endif // GRAPH_H
