@@ -1,113 +1,77 @@
 #include "animationwidget.h"
+#include "ui_animationwidget.h"
 
-#include<QSlider>
-#include<QHBoxLayout>
-#include<QPushButton>
-#include<QSignalBlocker>
+#include <QSignalBlocker>
 
-Animationswidget::Animationswidget(QWidget *parent) : QWidget(parent)
+animationWidget::animationWidget(vector<Edge>eulerPath,QWidget *parent) :
+    QDockWidget(parent),_eulerPath(eulerPath),
+    ui(new Ui::AnimationWidget)
 {
-    geschwindigkeitSlider = new QSlider(Qt::Horizontal);
-    startStopAnimation    = new QPushButton("Animiere");
-
-    startStopAnimation->setCheckable(true);
-
-    QHBoxLayout* layout = new QHBoxLayout(this);
-
-    layout->addWidget(geschwindigkeitSlider);
-    layout->addWidget(startStopAnimation);
-
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-
-    connect(geschwindigkeitSlider, &QSlider::valueChanged   , this, &Animationswidget::neueAnimationsgeschwindigkeit);
-    connect(startStopAnimation   , &QAbstractButton::toggled, this, &Animationswidget::neuerAnimationstatus         );
+    ui->setupUi(this);
+    //connect(ui->pushButton, &QAbstractButton::toggled, this, &animationWidget::neuerAnimationstatus);
+   // connect(ui->horizontalSlider, &QSlider::valueChanged, this, &animationWidget::neueAnimationsgeschwindigkeit);
+    fillAnimationWidget();
 }
 
-void Animationswidget::setzeAnimationsstatus(bool v)
+animationWidget::~animationWidget()
+{
+    delete ui;
+}
+
+void animationWidget::setzeAnimationsstatus(bool v)
 {
     QSignalBlocker blocker(this); // kein Signal bei Änderungen aus dem Programm heraus
-    startStopAnimation->setChecked(v);
+    ui->pushButton -> setChecked(v);
 }
 
-void Animationswidget::setzeAnimationsgeschwindigkeit(int v)
+void animationWidget::setzeAnimationsgeschwindigkeit(int v)
 {
     QSignalBlocker blocker(this); // kein Signal bei Änderungen aus dem Programm heraus
-    geschwindigkeitSlider->setValue(v);
+    //ui->horizontalSlider->setValue(v);
 }
 
+void animationWidget::fillAnimationWidget()
+{
+    string result;
+    if(!_eulerPath.empty())
+    {
+    if(_eulerPath[0].src == _eulerPath[_eulerPath.size()-1].dest)
+    {
+            qDebug()<<"Kreis";
+            result.append("Ja, das ist ein Eulerkreis!");
+     }
+        else
+            {
+            qDebug()<<"Eulerweg";
+            result.append("Das ist leider kein Eulerkreis...");
+            }
+    }
+    model = new QStringListModel(this);
+    QStringList eulerResult;
+    eulerResult << QString::fromStdString(result);
+    model->setStringList(eulerResult);
+    ui->eulerResult->setModel(model);
 
+}
 
-//#include "animationwidget.h"
-//#include "ui_animationwidget.h"
-//
-//#include <QSignalBlocker>
-//
-//
-//
-//
-//animationWidget::animationWidget(QWidget *parent):
-//QDockWidget(parent),
-//ui(new Ui::AnimationWidget)
-//{
-//ui->setupUi(this);
-//}
-//
-//animationWidget::~animationWidget()
-//{
-//    delete ui;
-//}
-//
-//void animationWidget::eulerAnimation()
-//{
-//
-//    qDebug()<< "bin in Euleranimation";
-//
-//
-//    //Idee ein Timer der alle 1000 millisekunden ein signal an den slot Graph::aniChanged aufruft
-//   //QTimer *timer = new QTimer(this);
-//   //    connect(timer, SIGNAL(timeout()), &_Graphmodel, SLOT(&Graph::aniChanged));
-//   //    timer->start(1000);
-//
-//
-//
-//
-//
-//    //if(!_eulerPath.empty())
-//    //    if(_eulerPath[0].src == _eulerPath[_eulerPath.size()-1].dest)
-//    //        qDebug()<<"Kreis";
-//    //        else
-//    //        qDebug()<<"Eulerweg";
-//
-//
-//
-//        //Andere Idee :
-//        //Führe in einer Schleife solange _Graphmodel.newEdgeToColor aus bis alle Kanten im Eulerweg durchsind
-//
-//        //Leider unelegant und funktioniert auch nicht richtig
-//   //Debug()<<_Graphmodel.getPath().size();
-//   //
-//   //while(_Graphmodel.newEdgeToColor())
-//   //{
-//   //    //qDebug()<<"edgetoColor="<<_Graphmodel.edgeToColor;
-//   //    //qDebug()<<"edgetoColor="<<_Graphmodel.edgeToColor<<" now sleep";
-//   //    QThread::msleep(500);
-//   //}
-//   //qDebug()<<"fertig";
-//        //for(int i = 0;i<_eulerPath.size();i++)
-//        //    qDebug() <<_eulerPath[i].src << " "<<_eulerPath[i].dest;
-//
-//
-//}
-//
-//void animationWidget::setAnimationStatus(bool)
-//{
-//    QSignalBlocker block(this);
-//    ui->pushButton -> setChecked(true);
-//}
-//
-//void animationWidget::setAnimationSpeed(int v)
-//{
-//    QSignalBlocker block(this);
-//    ui->horizontalSlider->setValue(v);
-//}
-//
+void animationWidget::on_pushButton_clicked(bool checked)
+{
+    if(_eulerPath[0].src != _eulerPath[_eulerPath.size()-1].dest)
+    {
+        ui->pushButton->setCheckable(false);
+    }
+    else
+        ui->pushButton->setCheckable(true);
+
+    neuerAnimationstatus(ui->pushButton->isChecked());
+    if (ui->pushButton->isChecked()==true)
+    {
+        ui->pushButton->setText("Animation Ende");
+
+    }
+    else
+    {    if (ui->pushButton->isChecked()==false)
+            ui->pushButton->setText("Animation Start");
+    }
+}
+

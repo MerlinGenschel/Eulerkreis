@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>479</width>
-    <height>188</height>
+    <width>480</width>
+    <height>154</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,14 +18,13 @@
     <item>
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Starte Animation</string>
+       <string>Animation Start</string>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QSlider" name="horizontalSlider">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

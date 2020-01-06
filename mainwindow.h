@@ -8,14 +8,13 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 class control;
 class Graph;
-class paint;
+class animation;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
     Graph* model;
-    paint* view;
-
+    animation* animationController;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -45,16 +44,16 @@ private slots:
 
     void on_actionNeu_triggered();
 
-
+    void closeEvent(QCloseEvent*event);
+    void save();
+    void saveAs();
+    void load();
 private:
     Ui::MainWindow *ui;
     control *controller =nullptr;
     QAction *undo;
     QAction *redo;
     QString nameAkt;
-    void closeEvent(QCloseEvent *event);
-    void save();
-    void saveAs();
-    void load();
+
 };
 #endif // MAINWINDOW_H

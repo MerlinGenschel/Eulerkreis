@@ -1,76 +1,39 @@
-#ifndef ANIMATIONSWIDGET_H
-#define ANIMATIONSWIDGET_H
+#ifndef ANIMATIONWIDGET_H
+#define ANIMATIONWIDGET_H
+#include <QtGui>
+#include <QtCore>
+#include <QDockWidget>
+#include <QStringListModel>
 
-#include <QWidget>
+#include "Graph.h"
 
-class QSlider;
-class QPushButton;
+namespace Ui {
+class AnimationWidget;
+}
 
-
-// Passive Ansicht in MVP-Muster
-class Animationswidget : public QWidget
+class animationWidget : public QDockWidget
 {
     Q_OBJECT
+private:
+    Ui::AnimationWidget *ui;
+    QStringListModel* model;
+    vector<Edge>_eulerPath;
 
-    QSlider* geschwindigkeitSlider = nullptr;
-    QPushButton* startStopAnimation = nullptr;
 public:
-    explicit Animationswidget(QWidget *parent = nullptr);
+    explicit animationWidget(vector<Edge> eulerPath, QWidget *parent = nullptr);
+    ~animationWidget();
 
     void fillAnimationWidget();
 public slots:
     void setzeAnimationsstatus(bool);
     void setzeAnimationsgeschwindigkeit(int);
-
 signals:
     void neuerAnimationstatus(bool);
     void neueAnimationsgeschwindigkeit(int);
+//private slots:
+   // void on_horizontalSlider_valueChanged(int value);
+private slots:
+    void on_pushButton_clicked(bool checked);
 };
 
-#endif // ANIMATIONSWIDGET_H
-
-
-
-//#ifndef ANIMATIONWIDGET_H
-//#define ANIMATIONWIDGET_H
-//#include <QtGui>
-//#include <QtCore>
-//#include <QDockWidget>
-//#include <QStringListModel>
-//
-//#include "Graph.h"
-//#include "paint.h"
-//#include "QTimer"
-//
-//namespace Ui {
-//class AnimationWidget;
-//}
-//
-//
-//class animationWidget : public QDockWidget
-//{
-//    Q_OBJECT
-//
-//
-//private:
-//    Ui::AnimationWidget *ui;
-//    //QStringListModel* model;
-//    //vector<Edge>_eulerPath;
-//    //paint& _view;
-//    //const Graph& _Graphmodel;
-//public:
-//    explicit animationWidget(QWidget *parent = nullptr);
-//    ~animationWidget();
-//
-//    void eulerAnimation();
-//
-//public slots:
-//    void setAnimationStatus(bool);
-//    void setAnimationSpeed(int);
-//signals:
-//    void newAnimationStatus(bool);
-//    void newAnimationSpeed(int);
-//    void animationChanged();
-//};
-//
-//#endif // ANIMATIONWIDGET_H
+#endif // ANIMATIONWIDGET_H

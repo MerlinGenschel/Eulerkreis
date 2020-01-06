@@ -8,19 +8,15 @@
 #include "paint.h"
 #include "control.h"
 
-#include<QVBoxLayout>
 #include <QMessageBox>
 #include <QDebug>
 #include <QFileDialog>
 #include <QCloseEvent>
 #include <QUndoStack>
 #include <string>
-#include "animation.h"
-#include "animationwidget.h"
 
 //class Graph;
-
-class Animation;
+class animation;
 class animationWidget;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,39 +25,26 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
-
-
     QUndoStack *undoStack = new QUndoStack(this);
     // ui->actionBeenden();
-    
-    Animationswidget* animationswidget  = new Animationswidget;
-
     model                      = new Graph(this);
-    view          = new paint(*model);
+    paint *view          = new paint(*model);
     /*control *controller = new control(*model,*view, undoStack, this);*/
-
     controller = new control(*model,*view, undoStack, this);
 
-    Animationspresenter* animationscontroller = new Animationspresenter(*model, this);
-
-    animationscontroller->addAnimationswidget(*animationswidget);
-    //animation* animationspresenter = new animation(*model,*view,undoStack,parent);
-    //animationWidget* animationswidget  = new animationWidget(*model,*view,parent);
-    //animationspresenter->addAnimationswidget(*animationswidget);
+    vector<Edge>eulerPath = model->getPath();
+    emit(model->graphChanged());
+    //ani = new animationWidget(eulerPath, this);
+   // ani->hide();
+    animationController= new animation(*model,undoStack,this);
     //control::modus = 1;
-
-
-    QWidget* widget = new QWidget;
-    QVBoxLayout* layout = new QVBoxLayout(widget);
-    layout->addWidget(view);
-    layout->addWidget(animationswidget);
-    setCentralWidget(widget);
+    setCentralWidget(view);
 
     undo = undoStack->createUndoAction(this);
     redo = undoStack->createRedoAction(this);
     ui->toolBar->addAction(undo);
     ui->toolBar->addAction(redo);
-
+   // connect(ani, SIGNAL(setzeGeschwindigkeit(int)),controller, SLOT(neueGeschwindigkeit(int)));
 }
 
 MainWindow::~MainWindow()
@@ -74,12 +57,18 @@ void MainWindow::save()
     if (nameAkt.isEmpty())
     {
         nameAkt = QFileDialog::getSaveFileName(this, "Datei speichern", "/home");
+
         model->writeToFile(nameAkt.toUtf8().constData());
+        controller->deleteUndoStack();
     }
     else
+    {
         if (!nameAkt.isEmpty())
-        model->writeToFile(nameAkt.toUtf8().constData());
-    controller->deleteUndoStack();
+        {
+            model->writeToFile(nameAkt.toUtf8().constData());
+            controller->deleteUndoStack();
+        }
+    }
 }
 //Funktion speichern unter
 void MainWindow::saveAs()
@@ -91,9 +80,9 @@ void MainWindow::saveAs()
         qDebug() << nameAkt.toUtf8();
 
         model->writeToFile(nameAkt.toUtf8().constData());
-
-    }
         controller->deleteUndoStack();
+    }
+
 }
 //Funktion laden
 void MainWindow::load()
@@ -102,13 +91,13 @@ void MainWindow::load()
     if(!nameAkt.isEmpty())
         model->readFromFile(nameAkt.toUtf8().constData());
 }
+
 //Dialog bei Schließen des Fensters
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (controller->cleanUndoStack())
     {
-
-        QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis schließen", tr("Wollen Sie das Programm wirklich schließen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
+        QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis verlassen", tr("Wollen Sie wirklich ohne Speichern verlassen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
         if(endButton == QMessageBox::Yes)
             event->accept();
         else if (endButton == QMessageBox::Save)
@@ -121,10 +110,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 void MainWindow::on_actionBeenden_triggered()
 {
-    QCloseEvent *event = new QCloseEvent;
+    QCloseEvent*event = new QCloseEvent;
     if (controller->cleanUndoStack())
     {
-        QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis schließen", tr("Wollen Sie das Programm wirklich schließen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
+        QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis verlassen", tr("Wollen Sie wirklich ohne Speichern verlassen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
         if(endButton == QMessageBox::Yes)
             event->accept();
         else if (endButton == QMessageBox::Save)
@@ -134,16 +123,6 @@ void MainWindow::on_actionBeenden_triggered()
         else
             event->ignore();
     }
-
-   /* QMessageBox::StandardButton beenden = QMessageBox::question(this, "Achtung!", "Wollen Sie ohne speichern beenden?"
-                                        , QMessageBox::Cancel | QMessageBox::Save | QMessageBox::Close);
-
-    if (beenden == QMessageBox::Close)
-    {
-        QApplication::quit();
-    }
-*/
-
 }
 
 //Erstelle neues DockWidget zur Anzeige der KnotenListe / Adjazenzliste
@@ -162,7 +141,6 @@ void MainWindow::on_actionBedienungsanleitung_triggered()
 
     DialogHelp hilfe;
     hilfe.exec();
-
 }
 
 //Lade neue Datei
@@ -210,39 +188,54 @@ void MainWindow::on_actionSpeichern_triggered()
 //Animation und Eulerkreis Prüfung
 void MainWindow::on_actionEulerkreis_triggered()
 {
-    if (model->printEulerWeg())
-        qDebug()<<"Es gibt einen EulerWeg/Eulerkreis: Klicke auf Animation um die Animation zu starten";
-    //qDebug()<<model->getPath().size();
-    //if (model->printEulerWeg())
-    //{
-    ////vector<Edge>eulerPath = model->getPath();
-    ////emit(model->graphChanged());
-    //Animationswidget *ani = new Animationswidget(this);
-    ////addDockWidget(Qt::TopDockWidgetArea, ani);
-    ////ani->eulerAnimation(  );
-    //
-   ///* if(model->printEulerWeg())
-    //{
-    //    vector<Edge>eulerPath = model->getPath();
-    //    if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
-    //        qDebug()<<"Kreis";
-    //    else
-    //        qDebug()<<"Eulerweg";
-    //    for(int i = 0;i<eulerPath.size();i++)
-    //        qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
-    //
-    //}
-    //else
-    //{
-    //     qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
-    //}*/
+        if (model->printEulerWeg())
+        {
 
+        vector<Edge>eulerPath = model->getPath();
+        emit(model->graphChanged());
+        animationWidget *ani = new animationWidget(eulerPath, this);
+        animationController->addAnimationswidget(*ani);
+        addDockWidget(Qt::TopDockWidgetArea, ani);
+
+
+   /* if(model->printEulerWeg())
+    {
+        vector<Edge>eulerPath = model->getPath();
+        if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
+            qDebug()<<"Kreis";
+        else
+            qDebug()<<"Eulerweg";
+        for(int i = 0;i<eulerPath.size();i++)
+            qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
+
+    }
+    else
+    {
+         qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
+    }*/
+
+//}
 }
-
-
+}
 
 void MainWindow::on_actionNeu_triggered()
 {
-       if (!model->getSize()==0)
-           model->clear();
+    QCloseEvent *event = new QCloseEvent;
+    if (controller->cleanUndoStack())
+    {
+        QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis verlassen", tr("Wollen Sie das Dokument verwerfen?"), QMessageBox::No| QMessageBox::Yes| QMessageBox::Save);
+        if(endButton == QMessageBox::Yes)
+        {
+            event->accept();
+            if (model->getSize()!=0)
+                model->clear();
+        }
+        else if (endButton == QMessageBox::Save)
+        {
+            save();
+        }
+        else
+            event->ignore();
+    }
+
 }
