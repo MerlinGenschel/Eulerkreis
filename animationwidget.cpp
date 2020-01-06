@@ -40,11 +40,10 @@ void animationWidget::fillAnimationWidget()
             qDebug()<<"Kreis";
             result.append("Ja, das ist ein Eulerkreis!");
      }
-        else
-            {
-            qDebug()<<"Eulerweg";
+     else
+     {
             result.append("Das ist leider kein Eulerkreis...");
-            }
+     }
     }
     model = new QStringListModel(this);
     QStringList eulerResult;
