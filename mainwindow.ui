@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>577</width>
-    <height>396</height>
+    <width>1015</width>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,8 +23,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>577</width>
-     <height>22</height>
+     <width>1015</width>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDatei">
@@ -105,7 +105,7 @@
   </action>
   <action name="actionVerbinden">
    <property name="text">
-    <string>Verbinden</string>
+    <string>Verbinden/ Trennen</string>
    </property>
   </action>
   <action name="actionWiederherstellen">
@@ -135,7 +135,7 @@
   </action>
   <action name="actionL_schen">
    <property name="text">
-    <string>Löschen</string>
+    <string>Knoten Löschen</string>
    </property>
   </action>
   <action name="actionEulerkreis">
