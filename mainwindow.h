@@ -48,6 +48,7 @@ private slots:
     void save();
     void saveAs();
     void load();
+    void neu();
 private:
     Ui::MainWindow *ui;
     control *controller = nullptr;

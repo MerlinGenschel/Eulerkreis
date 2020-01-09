@@ -90,6 +90,13 @@ void MainWindow::load()
         model->readFromFile(nameAkt.toUtf8().constData());
 }
 
+//Neuen Graphen erstellen
+void MainWindow::neu()
+{
+    if (model->getSize()!=0)
+        model->clear();
+}
+
 //Dialog bei Schließen des Fensters
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -191,21 +198,27 @@ void MainWindow::on_actionEulerkreis_triggered()
     }
 }
 
+//Neuer Graph
 void MainWindow::on_actionNeu_triggered()
 {
     QCloseEvent *event = new QCloseEvent;
+    //Falls vorige Datei nicht gespeichert wurde
     if (controller->cleanUndoStack())
     {
         QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis verlassen", tr("Wollen Sie das Dokument verwerfen?"), QMessageBox::No| QMessageBox::Yes| QMessageBox::Save);
         if(endButton == QMessageBox::Yes)
         {
             event->accept();
-            if (model->getSize()!=0)
-                model->clear();
+            neu();
         }
         else if (endButton == QMessageBox::Save)
             save();
         else
             event->ignore();
+    }
+    else
+    {
+        event->accept();
+        neu();
     }
 }
