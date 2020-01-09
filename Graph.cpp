@@ -467,7 +467,7 @@ void Graph::printGraph()
     }
     qDebug()<<"___________________ ";
 }
-
+//Leere das Modell
 void Graph::clear()
 {
     _coordList.clear();

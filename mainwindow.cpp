@@ -90,14 +90,14 @@ void MainWindow::load()
         model->readFromFile(nameAkt.toUtf8().constData());
 }
 
-//Neuen Graphen erstellen
+//Lade Benutzeroberfläche neu
 void MainWindow::neu()
 {
     if (model->getSize()!=0)
         model->clear();
 }
 
-//Dialog bei Schließen des Fensters
+//Dialog bei Schließen des Fensters, falls vorher nicht gespeichert wurde
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (controller->cleanUndoStack())
@@ -111,7 +111,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
     }
 }
-
+//Dialog beim Drücken des Beenden Buttons, falls vorher nicht gespeichert wurde
 void MainWindow::on_actionBeenden_triggered()
 {
     QCloseEvent *event = new QCloseEvent;
