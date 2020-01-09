@@ -32,13 +32,13 @@ class control : public QObject
     void move(QMouseEvent* event);
 
     // Die Steuerung ist dafür zuständig, welcher Knoten ausgewählt ist. Wird für die Interaktion benötigt
-    int activeNode = std::numeric_limits<int>::max(); // Index des angeklickten/ausgewählten Knotens
+    size_t activeNode = std::numeric_limits<int>::max(); // Index des angeklickten/ausgewählten Knotens
 
     // Prüfen ob aktiver Knoten gültig ist
     bool activeNodeValid(QMouseEvent* event) const;
 
     // index des ausgewählten Knotens
-    int _selectedNode;
+    size_t _selectedNode;
 
     //Soll zwischen NUll und Eins wechseln um festzulegen an welcher Stelle im
     //zuVerbiden Array der aktuelle Index gespeichert werden soll

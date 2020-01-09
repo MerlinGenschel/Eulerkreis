@@ -32,7 +32,7 @@ void animation::setzeGeschwindigkeit(int wert)
     geschwindigkeit = static_cast<double>(wert)/maxSlider*maxGeschwindigkeit;
     neueAnimationsgeschwindigkeit(wert);
 }
-void animation::timerEvent(QTimerEvent *event)
+void animation::timerEvent(QTimerEvent* /*event*/)
 {
 
         modell.newEdgeToColor();

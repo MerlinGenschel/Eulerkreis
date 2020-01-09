@@ -11,11 +11,11 @@ class paint;
 class moveCommand : public QUndoCommand
 {
     QPointer<Graph> model;
-    int nodeId;
+    size_t nodeId;
     QPointF posNew;
     QPointF posOld;
 public:
-    moveCommand(Graph* modell, int id, QPointF pos);
+    moveCommand(Graph* modell, size_t id, QPointF pos);
 
     void undo() override;
     void redo() override;

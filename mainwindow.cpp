@@ -19,38 +19,34 @@
 class animation;
 class animationWidget;
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
 
     ui->setupUi(this);
     QUndoStack *undoStack = new QUndoStack(this);
-    // ui->actionBeenden();
-    model                      = new Graph(this);
-    paint *view          = new paint(*model);
-    /*control *controller = new control(*model,*view, undoStack, this);*/
-    controller = new control(*model,*view, undoStack, this);
+    model                 = new Graph(this);
+    paint *view           = new paint(*model);
+    controller            = new control(*model, *view, undoStack, this);
 
     vector<Edge>eulerPath = model->getPath();
     emit(model->graphChanged());
-    //ani = new animationWidget(eulerPath, this);
-   // ani->hide();
-    animationController= new animation(*model,undoStack,this);
-    //control::modus = 1;
+
+    animationController = new animation(*model,undoStack,this);
     setCentralWidget(view);
 
     undo = undoStack->createUndoAction(this);
     redo = undoStack->createRedoAction(this);
     ui->toolBar->addAction(undo);
     ui->toolBar->addAction(redo);
-   // connect(ani, SIGNAL(setzeGeschwindigkeit(int)),controller, SLOT(neueGeschwindigkeit(int)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 //Funktion speichern
 void MainWindow::save()
 {
@@ -70,6 +66,7 @@ void MainWindow::save()
         }
     }
 }
+
 //Funktion speichern unter
 void MainWindow::saveAs()
 {
@@ -84,6 +81,7 @@ void MainWindow::saveAs()
     }
 
 }
+
 //Funktion laden
 void MainWindow::load()
 {
@@ -101,25 +99,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if(endButton == QMessageBox::Yes)
             event->accept();
         else if (endButton == QMessageBox::Save)
-        {
             save();
-        }
         else
             event->ignore();
     }
 }
+
 void MainWindow::on_actionBeenden_triggered()
 {
-    QCloseEvent*event = new QCloseEvent;
+    QCloseEvent *event = new QCloseEvent;
     if (controller->cleanUndoStack())
     {
         QMessageBox::StandardButton endButton = QMessageBox::question(this, "Eulerkreis verlassen", tr("Wollen Sie wirklich ohne Speichern verlassen?"), QMessageBox::Cancel| QMessageBox::Yes| QMessageBox::Save);
         if(endButton == QMessageBox::Yes)
             event->accept();
         else if (endButton == QMessageBox::Save)
-        {
             save();
-        }
         else
             event->ignore();
     }
@@ -128,17 +123,15 @@ void MainWindow::on_actionBeenden_triggered()
 //Erstelle neues DockWidget zur Anzeige der KnotenListe / Adjazenzliste
 void MainWindow::on_actionKnotenliste_triggered()
 {
-    DockWidget* dock = new DockWidget(*model,this);
+    DockWidget* dock = new DockWidget(*model, this);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
     //Verbinde den "graphChanged" mit "updateKnotenListe"
     connect(model, &Graph::graphChanged,dock,&DockWidget::updateKnotenListe);
-
 }
 
 void MainWindow::on_actionBedienungsanleitung_triggered()
 {
-
     DialogHelp hilfe;
     hilfe.exec();
 }
@@ -188,34 +181,14 @@ void MainWindow::on_actionSpeichern_triggered()
 //Animation und Eulerkreis Prüfung
 void MainWindow::on_actionEulerkreis_triggered()
 {
-        if (model->printEulerWeg())
-        {
-
+    if (model->printEulerWeg())
+    {
         vector<Edge>eulerPath = model->getPath();
         emit(model->graphChanged());
         animationWidget *ani = new animationWidget(eulerPath, this);
         animationController->addAnimationswidget(*ani);
         addDockWidget(Qt::TopDockWidgetArea, ani);
-
-
-   /* if(model->printEulerWeg())
-    {
-        vector<Edge>eulerPath = model->getPath();
-        if(eulerPath[0].src == eulerPath[eulerPath.size()-1].dest)
-            qDebug()<<"Kreis";
-        else
-            qDebug()<<"Eulerweg";
-        for(int i = 0;i<eulerPath.size();i++)
-            qDebug() <<eulerPath[i].src << " "<<eulerPath[i].dest;
-
     }
-    else
-    {
-         qDebug()<< "Graph hat keinen Eulerkreis/Eulerweg";
-    }*/
-
-//}
-}
 }
 
 void MainWindow::on_actionNeu_triggered()
@@ -231,11 +204,8 @@ void MainWindow::on_actionNeu_triggered()
                 model->clear();
         }
         else if (endButton == QMessageBox::Save)
-        {
             save();
-        }
         else
             event->ignore();
     }
-
 }

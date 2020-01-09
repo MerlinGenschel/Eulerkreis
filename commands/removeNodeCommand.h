@@ -11,9 +11,9 @@ class removeNodeCommand : public QUndoCommand
 {
     QPointer<Graph> model;
     QPointF pos;
-    int id;
+    size_t id;
 public:
-    removeNodeCommand(Graph* model, int id);
+    removeNodeCommand(Graph* model, size_t id);
 
     void undo() override;
     void redo() override;

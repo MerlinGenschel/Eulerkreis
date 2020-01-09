@@ -50,7 +50,7 @@ private slots:
     void load();
 private:
     Ui::MainWindow *ui;
-    control *controller =nullptr;
+    control *controller = nullptr;
     QAction *undo;
     QAction *redo;
     QString nameAkt;

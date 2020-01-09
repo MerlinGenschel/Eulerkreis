@@ -14,13 +14,13 @@ class DockWidget : public QDockWidget
 {
     Q_OBJECT
 private:
-    Ui::DockWidget *ui;
+    Ui::DockWidget* ui;
     QStringListModel* model;
     Graph& Graphmodel;
 
 
 public:
-    explicit DockWidget(Graph& Graphmodel,QWidget *parent = nullptr);
+    explicit DockWidget(Graph& Graphmodel, QWidget *parent = nullptr);
     ~DockWidget();
 
 void fillKnotenListe();

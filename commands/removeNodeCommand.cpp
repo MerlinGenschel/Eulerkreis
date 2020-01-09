@@ -4,7 +4,7 @@
 
 #include "Graph.h"
 
-removeNodeCommand::removeNodeCommand(Graph* model, int id)
+removeNodeCommand::removeNodeCommand(Graph* model, size_t id)
     : model(model)
     , id(id)
 {

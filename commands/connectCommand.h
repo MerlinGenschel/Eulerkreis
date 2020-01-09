@@ -11,11 +11,11 @@ class paint;
 class connectCommand : public QUndoCommand
 {
     QPointer<Graph> model;
-    int src;
-    int dest;
+    size_t src;
+    size_t dest;
 
 public:
-    connectCommand(Graph* model, int src, int dest);
+    connectCommand(Graph* model, size_t src, size_t dest);
 
     void undo() override;
     void redo() override;

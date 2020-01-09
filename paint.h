@@ -11,6 +11,7 @@ class Graph;
 class paint : public QWidget
 {
     Q_OBJECT
+
     // Für die Zeichenfunktion wird das Modell benötigt (Zugriff auf die Quadrate) -> Speicherung einer Referenz auf das Modell
     const Graph& model;
 
@@ -20,18 +21,8 @@ public:
 protected:
    void paintEvent(QPaintEvent* event) ;
 
-
-
-
-
 public slots:
    void animationEvent();
-
-
-
-//signals:
-//    void newAnimationStatus(bool active);
-//    void newAnimationSpeed(int val);
 };
 
 #endif // PAINT_H

@@ -11,7 +11,7 @@ class addNodeCommand : public QUndoCommand
 {
     QPointer<Graph> model;
     QPointF pos;
-    int id;
+    size_t id;
 public:
     addNodeCommand(Graph* model, QPointF pos);
 

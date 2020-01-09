@@ -1,7 +1,7 @@
 #include "moveCommand.h"
 #include "Graph.h"
 
-moveCommand::moveCommand(Graph* model, int id, QPointF pos)
+moveCommand::moveCommand(Graph* model, size_t id, QPointF pos)
     : model(model)
     , nodeId(id)
     , posNew(pos)

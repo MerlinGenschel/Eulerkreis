@@ -16,7 +16,7 @@ class animation:public QObject
     double geschwindigkeit = 0.01;
     const int maxSlider = 100;
     const double maxGeschwindigkeit = 1./50.;
-    void timerEvent(QTimerEvent* event) override;
+    void timerEvent(QTimerEvent* /*event*/) override;
     int animationstimer =0;
 
 public:

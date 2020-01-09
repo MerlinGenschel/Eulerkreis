@@ -15,12 +15,12 @@ class animationWidget : public QDockWidget
 {
     Q_OBJECT
 private:
-    Ui::AnimationWidget *ui;
+    Ui::AnimationWidget* ui;
     QStringListModel* model;
-    vector<Edge>_eulerPath;
+    vector<Edge> _eulerPath;
 
 public:
-    explicit animationWidget(vector<Edge> eulerPath, QWidget *parent = nullptr);
+    explicit animationWidget(vector<Edge> eulerPath, QWidget* parent = nullptr);
     ~animationWidget();
 
     void fillAnimationWidget();

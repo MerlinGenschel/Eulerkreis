@@ -80,7 +80,7 @@ void control::remove(QMouseEvent* event)
     int index = model.clickedOnNode(event->x()/width
                                   , event->y()/height);
     if (activeNodeValid(event))
-        undoStack->push(new removeNodeCommand(&model, index));
+        undoStack->push(new removeNodeCommand(&model, size_t(index)));
 }
 
 // Knoten verbinden

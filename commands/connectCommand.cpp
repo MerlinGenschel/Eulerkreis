@@ -1,7 +1,7 @@
 #include "connectCommand.h"
 #include "Graph.h"
 
-connectCommand::connectCommand(Graph* model, int src, int dest)
+connectCommand::connectCommand(Graph* model, size_t src, size_t dest)
      : model(model)
      , src (src)
      , dest (dest)
