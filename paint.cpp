@@ -65,7 +65,7 @@ void paint::paintEvent(QPaintEvent* /*event*/)
         for(size_t k = 0; k < numEdges; k++)
         {
             //Grüne Kanten
-            int edg = model.edgeToColor;
+            int edg = model.getEdgeToColor();
             if (!path.empty()
                     &&  edg !=-1 && edg < path.size()
                     &&  path.at(edg).src==i
@@ -106,8 +106,8 @@ void paint::paintEvent(QPaintEvent* /*event*/)
     QFont font=p.font() ;
     font.setPointSize ( 24 );
     p.setFont(font);
-    QString s = QString::number(model.edgeToColor);
-    if(model.edgeToColor!=-1)
+    QString s = QString::number(model.getEdgeToColor());
+    if(model.getEdgeToColor()!=-1)
         p.drawText(pos,s);
 }
 

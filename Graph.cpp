@@ -67,7 +67,6 @@ void Graph::writeToFile(const string &dateiName)
     ofstream fout( dateiName.c_str() ) ;
 
     fout << _numNodes << endl;
-
     fout << _numEdges << endl;
 
     //Koordinaten der Knoten
@@ -92,7 +91,6 @@ void Graph::writeToFile(const string &dateiName)
 //Es wird davon ausgegangen, dass der aktuelle Graph überschrieben werden darf
 void Graph::readFromFile(const string &dateiName)
 {ifstream fin( dateiName.c_str() ) ;
-    qDebug()<< "readFromFole()";
     if ( ! fin )
         throw "Graph::Graph(): Datei kann nicht geoeffnet werden!" ;
 
@@ -102,10 +100,8 @@ void Graph::readFromFile(const string &dateiName)
     string dummy ;				// zum Lesen und Ignorieren
 
     fin >> nKnoten ;
-    qDebug()<<"nKnoten= "<<nKnoten;
     getline( fin, dummy ) ;		// ignoriere Rest der Zeile
     fin >> nKanten ;
-    qDebug()<<"nKanten= "<<nKanten;
     getline( fin, dummy ) ;		// ignoriere Rest der Zeile
 
     _coordList.clear();
@@ -137,7 +133,6 @@ void Graph::readFromFile(const string &dateiName)
         {
             //Füge Kante hinzu
             addEdgeReadFromFile(i,size_t(stoi(desti)));
-            qDebug()<<"addEdge("<<i<<","<<stoi(desti)<<")";
         }
     }
 
@@ -319,7 +314,6 @@ int Graph::clickedOnNode(double _x, double _y, double nodeRadius)
         //liegt übergebener Punkt im Kreis?
         if( pow((_x-x),2) + pow((_y-y),2) < pow(nodeRadius,2) )
         {
-            qDebug() << "gefunden";
             return int(index);
         }
     }

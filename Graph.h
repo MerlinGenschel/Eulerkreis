@@ -46,8 +46,9 @@ class Graph:public QObject
     //Vector von bools um im Algo festzustellen, ob alle Knoten besucht wurden (evtl mehr als eine ZHK)
     vector<bool> _besucht;
 
-public:
     int edgeToColor = -1;
+public:
+
 
     //Standard Konstruktor
     Graph(QObject* parent){}
@@ -94,6 +95,10 @@ public:
         return eulerPath;
     }
 
+    int getEdgeToColor() const
+    {
+        return edgeToColor;
+    }
     //Liefert den Grad des Knotens mit index i
     int getDegree(size_t i);
 
@@ -106,12 +111,10 @@ public:
     //Liefert vektor mit den indizes Knoten die mit i per Kante verbunden sind.
     vector<int> getEdges(size_t i) const
     {
-        if (/*i<0 || */i > _numNodes)
-            qDebug()<< "Fehler bei getEdges()";
-        return adjList[i];
+        return adjList.at(i);
     }
 
-    //Die ind der Animation zu färbende Kante wird geändert
+    //Die in der Animation zu färbende Kante wird geändert
     void newEdgeToColor()
     {
         emit(graphChanged());
