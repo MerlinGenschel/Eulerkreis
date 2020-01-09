@@ -126,6 +126,8 @@ bool control::activeNodeValid(QMouseEvent* event) const
                                   , event->y()/height);
     if (index != -1)
         return true;
+    else
+        return false;
 }
 
 //Clean-Status für UndoStack setzen

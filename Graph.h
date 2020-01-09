@@ -173,13 +173,7 @@ public:
     //gib die koordinaten zu dem i-ten Knoten
     pair<double,double> getCoord(size_t i) const
     {
-        if (i >= _numNodes)
-        {
-            //qDebug() << "Fehler bei get Coord, denn i="<<i<<" >= _numNodes="<<_numNodes;
-        }
-        //qDebug() << _numEdges << " " << i;
-        else
-            return _coordList[i];
+        return _coordList[i];
     }
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
