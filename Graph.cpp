@@ -483,8 +483,7 @@ void Graph::clear()
     adjList.clear();
     _numEdges=0;
     _numNodes=0;
-    edgeToColor=false;
-    eulerPath.clear();
+    resetPath();
     emit(graphChanged());
 }
 

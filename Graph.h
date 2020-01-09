@@ -120,8 +120,6 @@ public:
         if(edgeToColor == int(eulerPath.size()))
             edgeToColor -= eulerPath.size();
 
-        ////qDebug()<< "In newEdgetoColor";
-        ////edgeToColor= (edgeToColor+1)%3;
     }
 
     //Schreibe den Graphen in eine Datei
@@ -173,7 +171,7 @@ public:
     //gib die koordinaten zu dem i-ten Knoten
     pair<double,double> getCoord(size_t i) const
     {
-        return _coordList[i];
+        return _coordList.at(i);
     }
 
     //verschiebt den Knoten mit der Nummer "index" (sofern er existiert)
