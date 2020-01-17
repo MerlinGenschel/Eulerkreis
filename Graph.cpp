@@ -191,14 +191,19 @@ void Graph::rmvEdge(size_t src, size_t dest)
     // Finde dest in Adjazenzliste von src und lösche
     vector<int>::iterator idest = find(adjList[src].begin(), adjList[src].end(), dest);
     if (idest !=adjList[src].end())
-       adjList[src].erase(idest);
-
+    {
+        adjList[src].erase(idest);
+        _numEdges--;
+    }
     if(!GERICHTET)
     {
        //  Finde src in Adjazenzliste von dest und lösche
        vector<int>::iterator isrc = find(adjList[dest].begin(), adjList[dest].end(), src);
        if (isrc !=adjList[dest].end())
-           adjList[dest].erase(isrc);
+       {    adjList[dest].erase(isrc);
+               _numEdges--;
+       }
+
     }
 }
 
