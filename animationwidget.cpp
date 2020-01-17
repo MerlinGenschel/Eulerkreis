@@ -28,6 +28,7 @@ void animationWidget::setzeAnimationsgeschwindigkeit(int v)
     QSignalBlocker blocker(this); // kein Signal bei Änderungen aus dem Programm heraus
 }
 
+//Gibt nach Prüfung auf Eulerkreis entsprechenden Text in der List View aus
 void animationWidget::fillAnimationWidget()
 {
     string result;
@@ -51,11 +52,12 @@ void animationWidget::fillAnimationWidget()
 
 void animationWidget::on_pushButton_clicked(bool checked)
 {
+    //Falls kein Eulerkreis vorliegt, deaktiviere PushButton
     if(_eulerPath[0].src != _eulerPath[_eulerPath.size()-1].dest)
         ui->pushButton->setCheckable(false);
     else
         ui->pushButton->setCheckable(true);
-
+    //Ändere Name des Push Buttons, wenn Animation aktiv ist
     neuerAnimationstatus(ui->pushButton->isChecked());
     if (ui->pushButton->isChecked() == true)
         ui->pushButton->setText("Animation Ende");

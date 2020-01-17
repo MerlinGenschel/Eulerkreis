@@ -16,7 +16,7 @@ DockWidget::~DockWidget()
 {
     delete ui;
 }
-
+//Schreibt die Knoten und ihre über Kante verbundenen zugehörigen Knoten in die List View
 void DockWidget::fillKnotenListe()
 {
     string test;

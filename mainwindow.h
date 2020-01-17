@@ -45,6 +45,7 @@ private slots:
     void on_actionNeu_triggered();
 
     void closeEvent(QCloseEvent*event);
+
     void save();
     void saveAs();
     void load();
